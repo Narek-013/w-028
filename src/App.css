@@ -13,15 +13,37 @@
 button {
   font-family: "ArturFont", sans-serif;
 }
+html.intro-locked,
+html.intro-locked body {
+  overflow: hidden;
+  height: 100%;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
 .App {
   position: relative;
   width: 100%;
   font-family: "Colonna", sans-serif;
   min-height: 100dvh;
   z-index: 0;
-  overflow: hidden;
   text-shadow: 0 0 6px rgb(0, 0, 0);
+}
 
+.App--intro-active {
+  overflow: hidden;
+  height: 100dvh;
+}
+
+.App_content {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
+}
+
+.App--revealed .App_content {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .App::before {

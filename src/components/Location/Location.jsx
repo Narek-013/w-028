@@ -21,7 +21,7 @@ const Location = () => {
           lat={40.270046}
           lon={44.293911}
         /> */}
-        <Clock/>
+        {/* <Clock/> */}
       </div>
     </div>
   );

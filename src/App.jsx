@@ -1,13 +1,35 @@
+import { useEffect, useState } from "react";
 import Confirm from "./components/Confirm/Confirm";
 import Location from "./components/Location/Location";
 import MainSection from "./components/MainSection/MainSection";
+import GuestInvite from "./components/GuestInvite/GuestInvite";
 import Timing from "./components/Timing/Timing";
 import Sound from "./components/Sound/Sound";
 import Locations from "./components/Locations/Locations";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
+import Intro from "./components/Intro/Intro";
 import "./App.css";
 
 function App() {
+  const [showIntro, setShowIntro] = useState(false);
+  const [contentVisible, setContentVisible] = useState(true);
+
+  useEffect(() => {
+    if (!showIntro) return;
+
+    const preventScroll = (e) => e.preventDefault();
+
+    document.documentElement.classList.add("intro-locked");
+    document.addEventListener("wheel", preventScroll, { passive: false });
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+
+    return () => {
+      document.documentElement.classList.remove("intro-locked");
+      document.removeEventListener("wheel", preventScroll);
+      document.removeEventListener("touchmove", preventScroll);
+    };
+  }, [showIntro]);
+
   // useEffect(() => {
   //   const blockContext = (e) => e.preventDefault();
 
@@ -43,15 +65,26 @@ function App() {
   //   };
   // }, []);
   return (
-    <div className="App">
+    <div
+      className={`App ${contentVisible ? "App--revealed" : ""} ${showIntro ? "App--intro-active" : ""}`}
+    >
+      {showIntro && (
+        <Intro
+          onFadeStart={() => setContentVisible(true)}
+          onComplete={() => setShowIntro(false)}
+        />
+      )}
       <LanguageSwitcher />
-      {/* <Sound /> */}
+      <Sound />
+      <div className="App_content">
       {/* <Clock /> */}
+      <GuestInvite />
       <MainSection />
       {/* <WeddingDate /> */}
       <Location />
       <Locations/>
       <Confirm />
+      </div>
     </div>
   );
 }

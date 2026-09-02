@@ -18,14 +18,36 @@ const WEEKDAY_KEYS = [
 ];
 
 const FALLBACK_TRANSLATIONS = {
-  month_10: "OCTOBER",
-  weekday_mon: "MON",
-  weekday_tue: "TUE",
-  weekday_wed: "WED",
-  weekday_thu: "THU",
-  weekday_fri: "FRI",
-  weekday_sat: "SAT",
-  weekday_sun: "SUN",
+  hy: {
+    month_10: "ՀՈԿՏԵՄԲԵՐ",
+    weekday_mon: "ԵԿ",
+    weekday_tue: "ԵՌ",
+    weekday_wed: "ՉՐ",
+    weekday_thu: "ՀՆ",
+    weekday_fri: "ՈՒ",
+    weekday_sat: "ՇԲ",
+    weekday_sun: "ԿԻ",
+  },
+  en: {
+    month_10: "OCTOBER",
+    weekday_mon: "MON",
+    weekday_tue: "TUE",
+    weekday_wed: "WED",
+    weekday_thu: "THU",
+    weekday_fri: "FRI",
+    weekday_sat: "SAT",
+    weekday_sun: "SUN",
+  },
+  ru: {
+    month_10: "ОКТЯБРЬ",
+    weekday_mon: "ПН",
+    weekday_tue: "ВТ",
+    weekday_wed: "СР",
+    weekday_thu: "ЧТ",
+    weekday_fri: "ПТ",
+    weekday_sat: "СБ",
+    weekday_sun: "ВС",
+  },
 };
 
 function buildCalendarDays(year, month) {
@@ -54,9 +76,11 @@ function buildCalendarDays(year, month) {
 }
 
 const WeddingDate = () => {
-  const { calendarTranslations } = useLanguage();
-  const labels = calendarTranslations ?? FALLBACK_TRANSLATIONS;
-  const monthLabel = labels[`month_${WEDDING_MONTH}`] ?? FALLBACK_TRANSLATIONS.month_10;
+  const { languageCode, calendarTranslations } = useLanguage();
+  const fallback =
+    FALLBACK_TRANSLATIONS[languageCode] ?? FALLBACK_TRANSLATIONS.hy;
+  const labels = { ...fallback, ...calendarTranslations };
+  const monthLabel = labels[`month_${WEDDING_MONTH}`] ?? fallback.month_10;
   const weeks = buildCalendarDays(WEDDING_YEAR, WEDDING_MONTH);
 
   return (
@@ -81,7 +105,7 @@ const WeddingDate = () => {
             <tr>
               {WEEKDAY_KEYS.map((key) => (
                 <th key={key} className="WeddingDate_weekday">
-                  {labels[key] ?? FALLBACK_TRANSLATIONS[key]}
+                  {labels[key] ?? fallback[key]}
                 </th>
               ))}
             </tr>

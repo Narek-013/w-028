@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { fetchCalendarTranslations, fetchLanguages } from "../lib/directus";
+import { fetchCalendarTranslations, fetchGuestInviteTranslations, fetchLanguages } from "../lib/directus";
 
 const STORAGE_KEY = "wedding_locale";
 
@@ -11,6 +11,7 @@ export function LanguageProvider({ children }) {
     () => localStorage.getItem(STORAGE_KEY) || null,
   );
   const [calendarTranslations, setCalendarTranslations] = useState(null);
+  const [guestInviteTranslations, setGuestInviteTranslations] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -51,11 +52,19 @@ export function LanguageProvider({ children }) {
 
     let cancelled = false;
     localStorage.setItem(STORAGE_KEY, languageCode);
+    setCalendarTranslations(null);
+    setGuestInviteTranslations(null);
 
     async function loadTranslations() {
       try {
-        const translations = await fetchCalendarTranslations(languageCode);
-        if (!cancelled) setCalendarTranslations(translations);
+        const [calendar, guestInvite] = await Promise.all([
+          fetchCalendarTranslations(languageCode),
+          fetchGuestInviteTranslations(languageCode),
+        ]);
+        if (!cancelled) {
+          setCalendarTranslations(calendar);
+          setGuestInviteTranslations(guestInvite);
+        }
       } catch (err) {
         if (!cancelled) setError(err.message);
       }
@@ -78,11 +87,12 @@ export function LanguageProvider({ children }) {
       languageCode,
       currentLanguage,
       calendarTranslations,
+      guestInviteTranslations,
       loading,
       error,
       setLanguageCode,
     }),
-    [languages, languageCode, currentLanguage, calendarTranslations, loading, error],
+    [languages, languageCode, currentLanguage, calendarTranslations, guestInviteTranslations, loading, error],
   );
 
   return (

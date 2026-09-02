@@ -1,8 +1,8 @@
 .sound {
   .sound-block {
     position: fixed;
-    top: 16px;
-    left: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     z-index: 100;
 
     button {

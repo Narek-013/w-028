@@ -90,3 +90,14 @@ export async function fetchCalendarTranslations(languageCode) {
   const result = await directusFetch(`/items/calendar_translations?${params}`);
   return result.data?.[0] ?? null;
 }
+
+export async function fetchGuestInviteTranslations(languageCode) {
+  const params = new URLSearchParams({
+    "filter[language][code][_eq]": languageCode,
+    fields: ["id", "title", "body", "language.code"].join(","),
+    limit: "1",
+  });
+
+  const result = await directusFetch(`/items/guest_invite_translations?${params}`);
+  return result.data?.[0] ?? null;
+}
