@@ -7,12 +7,12 @@ const MainSection = () => {
   return (
     <div className="MainSection">
       <div className="MainSection_container container">
-        <h2>YOU ARE INVITED</h2>
-        {/* <p>Սիրով հրավիրում ենք Ձեզ մեր հարսանիքին</p>
+        <h2>Narek & Elen</h2>
+        <p>Սիրով հրավիրում ենք Ձեզ մեր հարսանիքին</p>
         <div className="images-box">
           <img src={Imgs.artur_maria1} alt="wedding" />
           <img src={Imgs.artur_maria2} alt="wedding" />
-        </div> */}
+        </div>
         <WeddingDate/>
       </div>
     </div>

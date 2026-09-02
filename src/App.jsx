@@ -1,12 +1,11 @@
 import Confirm from "./components/Confirm/Confirm";
 import Location from "./components/Location/Location";
 import MainSection from "./components/MainSection/MainSection";
-// import Timing from "./components/Timing/Timing";
-// import WeddingDate from "./components/WeddingDate/WeddingDate";
-// import Clock from "./components/Clock/Clock";
+import Timing from "./components/Timing/Timing";
 import Sound from "./components/Sound/Sound";
-import "./App.css";
 import Locations from "./components/Locations/Locations";
+import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
+import "./App.css";
 
 function App() {
   // useEffect(() => {
@@ -45,11 +44,11 @@ function App() {
   // }, []);
   return (
     <div className="App">
-      <Sound />
-      <MainSection />
+      <LanguageSwitcher />
+      {/* <Sound /> */}
       {/* <Clock /> */}
+      <MainSection />
       {/* <WeddingDate /> */}
-      {/* <Timing /> */}
       <Location />
       <Locations/>
       <Confirm />

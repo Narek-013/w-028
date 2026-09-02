@@ -11,6 +11,36 @@
     <title>Narek-Elen</title>
   </head>
   <body>
+    <!-- <audio
+      id="wedding-audio"
+      src="/audio-elegant.mp3"
+      autoplay
+      loop
+      playsinline
+      preload="auto"
+    ></audio> -->
+    <!-- <script>
+      (function () {
+        var audio = document.getElementById("wedding-audio");
+        if (!audio) return;
+
+        var START_TIME = 50;
+
+        var startMusic = function () {
+          audio.muted = false;
+          if (audio.currentTime < START_TIME) {
+            audio.currentTime = START_TIME;
+          }
+          audio.play().catch(function () {});
+        };
+
+        if (audio.readyState >= 1) {
+          startMusic();
+        } else {
+          audio.addEventListener("loadedmetadata", startMusic, { once: true });
+        }
+      })();
+    </script> -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <link

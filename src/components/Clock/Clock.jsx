@@ -7,7 +7,7 @@ const Clock = () => {
 
   useEffect(() => {
     const updateTimer = () => {
-      const dateEnd = new Date("2026-01-04T00:00:00").getTime();
+      const dateEnd = new Date("2026-10-26T00:00:00").getTime();
       const dateStart = new Date().getTime();
       const time = dateEnd - dateStart;
 

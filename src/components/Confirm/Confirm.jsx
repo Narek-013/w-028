@@ -175,7 +175,7 @@ const Confirm = () => {
             </form>
           )}
         </div>
-        <AdsFooter />
+        {/* <AdsFooter /> */}
       </div>
     </div>
   );

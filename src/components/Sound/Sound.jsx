@@ -1,50 +1,93 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./sound.scss";
 import { Imgs } from "../../img/imgs";
 
+const START_TIME = 50;
+const AUDIO_ID = "wedding-audio";
+
+function getAudio() {
+  return document.getElementById(AUDIO_ID);
+}
+
 const Sound = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
 
-  useEffect(() => {
-    handlePlay()
+  const syncPlayingState = useCallback(() => {
+    const audio = getAudio();
+    setIsPlaying(Boolean(audio && !audio.paused));
   }, []);
 
-  const handlePlay = () => {
-    const audio = audioRef.current;
-    if (audio) {
-      audio.muted = false;
-      audio.currentTime = 50;
-      audio
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch((err) => console.warn("Play failed:", err));
-    }
-  };
+  const handlePlay = useCallback(() => {
+    const audio = getAudio();
+    if (!audio) return;
 
-  const handleStop = () => {
-    const audio = audioRef.current;
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-      setIsPlaying(false);
+    audio.muted = false;
+    if (audio.currentTime < START_TIME) {
+      audio.currentTime = START_TIME;
     }
-  };
-  
+
+    audio
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch((err) => console.warn("Play failed:", err));
+  }, []);
+
+  const handleStop = useCallback(() => {
+    const audio = getAudio();
+    if (!audio) return;
+
+    audio.pause();
+    setIsPlaying(false);
+  }, []);
+
+  useEffect(() => {
+    const audio = getAudio();
+    if (!audio) return;
+
+    audio.muted = false;
+
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+
+    syncPlayingState();
+
+    if (audio.paused) {
+      handlePlay();
+    }
+
+    const resumeOnInteraction = () => {
+      const current = getAudio();
+      if (!current || !current.paused) return;
+      handlePlay();
+    };
+
+    document.addEventListener("click", resumeOnInteraction, { once: true });
+    document.addEventListener("touchstart", resumeOnInteraction, { once: true });
+
+    return () => {
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
+      document.removeEventListener("click", resumeOnInteraction);
+      document.removeEventListener("touchstart", resumeOnInteraction);
+    };
+  }, [handlePlay, syncPlayingState]);
 
   return (
-    <div className="sound container">
-      <audio ref={audioRef} src="/audio-elegant.mp3" autoPlay muted={false} hidden />
-      <div className="sound-block container">
-        {isPlaying ? (
-          <button onClick={handleStop}>
-            <img src={Imgs.volumeUp} alt="volumeButoon" />
-          </button>
-        ) : (
-          <button onClick={handlePlay}>
-            <img src={Imgs.volumeDown} alt="volumeButoon" />
-          </button>
-        )}
+    <div className="sound">
+      <div className="sound-block">
+        <button
+          type="button"
+          onClick={isPlaying ? handleStop : handlePlay}
+          aria-label={isPlaying ? "Turn music off" : "Turn music on"}
+        >
+          <img
+            src={isPlaying ? Imgs.volumeUp : Imgs.volumeDown}
+            alt={isPlaying ? "Music on" : "Music off"}
+          />
+        </button>
       </div>
     </div>
   );
