@@ -1,0 +1,91 @@
+.Clock {
+  // background-color: #f0f0f0;
+  width: 100%;
+  // max-width: 600px;
+  // background-image: url("../../img/images/names.jpg");
+  // background-position: center;
+  // background-size: cover;
+  margin: auto;
+  padding: 50px 20px;
+  // filter: drop-shadow(0 -50px 15px #e2e2e2);
+  text-shadow: 0 0 25px rgb(255, 255, 255);
+  color: black;
+  // border: 2px solid red;
+  // position: absolute;
+  // bottom: 100px;
+  // align-self: flex-end;
+  margin-top: 80%;
+
+  .clock__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .clock_time {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      flex-wrap: nowrap;
+      gap: 0;
+      margin-top: 50px;
+
+      .clock__item {
+        padding: 15px clamp(5px, 1vw, 30px) 0;
+        border-left: 1px solid rgb(133, 102, 72);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+
+        &:first-of-type {
+          border-left: none;
+        }
+
+
+        .clock__item-block {
+          position: relative;
+          height: clamp(50px, 6vw, 70px);
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(0); // ✅ ԱՆՊԱՅՄԱՆ
+            opacity: 1; // ✅ ԱՆՊԱՅՄԱՆ
+            text-align: center;
+            color:  rgb(133, 102, 72);
+            font-size: clamp(35px, 6vw, 60px);
+            transition: transform 0.5s ease-in-out, opacity 0.2s;
+          }
+
+          .new {
+            transform: translateY(100%);
+            opacity: 0;
+          }
+
+          .current {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+
+        p {
+          width: 75px;
+          font-size: 14px;
+          font-weight: 600;
+          padding-bottom: 20px;
+          z-index: 2;
+          text-align: center;
+          color:  rgb(133, 102, 72);
+
+        }
+      }
+    }
+  }
+}

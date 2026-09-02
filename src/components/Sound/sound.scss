@@ -1,0 +1,22 @@
+.sound {
+  position: relative;
+  display: flex;
+  justify-content: end;
+  .sound-block {
+    position: fixed;
+    top: 15px;
+    padding-right: 15px;
+    z-index: 20000;
+    button{
+      border: none;
+      padding: 5px;
+      background-color: transparent;
+      cursor: pointer;
+      img{
+        width: 45px;
+        height: 45px;
+        filter: drop-shadow(0 0 5px white);
+      }
+    }
+  }
+}

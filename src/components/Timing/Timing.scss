@@ -1,0 +1,17 @@
+.Timing {
+  padding: 50px 20px;
+  width: 100%;
+  // background-image: url("../../img/images/artur-maria-back3.jpg");
+  // background-position: center;
+  // background-size: cover;
+  height: 100dvh;
+  margin: auto;
+  .Timing_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+   
+    
+  }
+}
