@@ -8,11 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "directus:up": "docker compose -f ../helper_default/docker-compose.yaml up -d postgres directus",
-    "directus:down": "docker compose -f ../helper_default/docker-compose.yaml down",
-    "directus:logs": "docker compose -f ../helper_default/docker-compose.yaml logs -f directus",
-    "directus:migrate": "cd ../helper_default/.migrations && pnpm setup:schema && pnpm migrate",
-    "directus:setup": "npm run directus:up && npm run directus:migrate"
+    "directus:up": "docker compose up -d postgres directus",
+    "directus:down": "docker compose down",
+    "directus:logs": "docker compose logs -f directus",
+    "directus:migrate": "cd .migrations && npm install && npm run setup:schema && npm run migrate && cd .. && docker restart sam-inna-directus",
+    "directus:setup": "bash scripts/setup-directus.sh"
   },
   "dependencies": {
     "aos": "^2.3.4",

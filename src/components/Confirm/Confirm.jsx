@@ -19,7 +19,7 @@ const Confirm = () => {
   useEffect(() => {
     const getData = localStorage.getItem("invitation_user");
     if (getData) {
-      setUserCome(true);
+      setUserCome(false);
     }
   }, []);
 

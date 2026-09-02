@@ -1,0 +1,14 @@
+{
+  "name": "sam-inna-migrations",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "migrate": "node migrate.js",
+    "setup:schema": "node setup-migration-schema.js"
+  },
+  "dependencies": {
+    "@directus/sdk": "20.0.3",
+    "dotenv": "^17.2.3"
+  }
+}

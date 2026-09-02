@@ -1,0 +1,43 @@
+name: sam-inna
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sam-inna-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DIRECTUS_DB_DATABASE:-directus}
+      POSTGRES_USER: ${DIRECTUS_DB_USER:-directus}
+      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD:-directus}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  directus:
+    image: directus/directus:latest
+    container_name: sam-inna-directus
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "${DIRECTUS_PORT:-8056}:8055"
+    env_file:
+      - .env
+    environment:
+      KEY: ${DIRECTUS_KEY:-replace-with-random-key}
+      SECRET: ${DIRECTUS_SECRET:-replace-with-random-secret-min-32-chars}
+      DB_CLIENT: pg
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DIRECTUS_DB_DATABASE:-directus}
+      DB_USER: ${DIRECTUS_DB_USER:-directus}
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD:-directus}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD:-admin123456}
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL:-http://localhost:8056}
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: ${DIRECTUS_CORS_ORIGIN:-http://localhost:5173,http://localhost:4173}
+    volumes:
+      - ./directus/uploads:/directus/uploads
+
+volumes:
+  postgres-data:

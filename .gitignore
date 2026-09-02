@@ -9,7 +9,11 @@ lerna-debug.log*
 
 node_modules
 .env
+.migrations/.env
+.migrations/node_modules
 dist
+directus/uploads/*
+!directus/uploads/.gitkeep
 dist-ssr
 *.local
 
