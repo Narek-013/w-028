@@ -1,9 +1,44 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 import "./Clock.scss";
 
+const LABEL_KEYS = ["label_days", "label_hours", "label_minutes", "label_seconds"];
+
+const FALLBACK_TRANSLATIONS = {
+  hy: {
+    label_days: "Օր",
+    label_hours: "Ժամ",
+    label_minutes: "Րոպե",
+    label_seconds: "Վայրկյան",
+  },
+  en: {
+    label_days: "Days",
+    label_hours: "Hours",
+    label_minutes: "Minutes",
+    label_seconds: "Seconds",
+  },
+  ru: {
+    label_days: "Дни",
+    label_hours: "Часы",
+    label_minutes: "Минуты",
+    label_seconds: "Секунды",
+  },
+};
+
 const Clock = () => {
+  const { languageCode, clockTranslations } = useLanguage();
   const [timeLeft, setTimeLeft] = useState([0, 0, 0, 0]);
   const blocksRef = useRef([]);
+
+  const fallback =
+    FALLBACK_TRANSLATIONS[languageCode] ?? FALLBACK_TRANSLATIONS.hy;
+  const labels = useMemo(
+    () => ({
+      ...fallback,
+      ...clockTranslations,
+    }),
+    [fallback, clockTranslations],
+  );
 
   useEffect(() => {
     const updateTimer = () => {
@@ -14,7 +49,7 @@ const Clock = () => {
       if (time > 0) {
         const days = Math.floor(time / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
-          (time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          (time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
         );
         const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((time % (1000 * 60)) / 1000);
@@ -57,21 +92,21 @@ const Clock = () => {
     });
   }, [timeLeft]);
 
-  const labels = ["Days", "Hours", "Minutes", "Seconds"];
-
   return (
     <div className="Clock">
       <div className="clock__container container">
         <div className="clock_time">
-          {labels.map((label, idx) => (
-            <div className="clock__item" key={label}>
+          {LABEL_KEYS.map((key, idx) => (
+            <div className="clock__item" key={key}>
               <div
                 className="clock__item-block"
-                ref={(el) => (blocksRef.current[idx] = el)}
+                ref={(el) => {
+                  blocksRef.current[idx] = el;
+                }}
               >
                 <span className="current">{timeLeft[idx]}</span>
               </div>
-              <p>{label}</p>
+              <p>{labels[key] ?? fallback[key]}</p>
             </div>
           ))}
         </div>

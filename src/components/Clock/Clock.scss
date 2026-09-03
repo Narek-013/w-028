@@ -1,27 +1,20 @@
 .Clock {
-  // background-color: #f0f0f0;
   width: 100%;
-  // max-width: 600px;
-  // background-image: url("../../img/images/names.jpg");
-  // background-position: center;
-  // background-size: cover;
-  // margin: auto;
-  padding: 0px 20px;
-  // filter: drop-shadow(0 -50px 15px #e2e2e2);
-  text-shadow: 0 0 25px rgb(255, 255, 255);
-  color: black;
-  // border: 2px solid red;
-  // position: absolute;
-  // bottom: 100px;
-  // align-self: flex-end;
-  // margin-top: 80%;
+  max-width: 100%;
+  padding: 0 20px;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(255, 255, 255);
 
   .clock__container {
+    width: 100%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 
     .clock_time {
+      width: 100%;
+      max-width: 100%;
       display: flex;
       justify-content: center;
       align-items: stretch;
@@ -30,8 +23,10 @@
       margin-top: 50px;
 
       .clock__item {
-        padding: 15px clamp(5px, 1vw, 30px) 0;
-        border-left: 1px solid rgb(133, 102, 72);
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 15px clamp(4px, 1.5vw, 16px) 0;
+        border-left: 1px solid rgba(255, 216, 180, 0.45);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -42,10 +37,9 @@
           border-left: none;
         }
 
-
         .clock__item-block {
           position: relative;
-          height: clamp(50px, 6vw, 70px);
+          height: clamp(44px, 12vw, 70px);
           width: 100%;
           display: flex;
           align-items: center;
@@ -56,11 +50,12 @@
             top: 0;
             left: 0;
             right: 0;
-            transform: translateY(0); // ✅ ԱՆՊԱՅՄԱՆ
-            opacity: 1; // ✅ ԱՆՊԱՅՄԱՆ
+            transform: translateY(0);
+            opacity: 1;
             text-align: center;
-            color:  rgb(133, 102, 72);
-            font-size: clamp(35px, 6vw, 60px);
+            color: rgb(255, 216, 180);
+            text-shadow: 0 0 15px rgb(255, 255, 255);
+            font-size: clamp(28px, 8vw, 60px);
             transition: transform 0.5s ease-in-out, opacity 0.2s;
           }
 
@@ -76,15 +71,63 @@
         }
 
         p {
-          width: 75px;
-          font-size: 14px;
+          width: 100%;
+          max-width: 100%;
+          font-size: clamp(12px, 3.5vw, 14px);
           font-weight: 600;
           padding-bottom: 20px;
           z-index: 2;
           text-align: center;
-          color:  rgb(133, 102, 72);
-
+          color: rgb(255, 216, 180);
+          text-shadow: 0 0 15px rgb(255, 255, 255);
+          line-height: 1.2;
+          overflow-wrap: anywhere;
         }
+      }
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .Clock {
+    padding: 0 12px;
+
+    .clock__container .clock_time {
+      margin-top: 36px;
+
+      .clock__item {
+        padding: 10px 2px 0;
+
+        .clock__item-block {
+          height: clamp(40px, 11vw, 52px);
+
+          span {
+            font-size: clamp(24px, 7.5vw, 32px);
+          }
+        }
+
+        p {
+          font-size: 13px;
+          padding-bottom: 14px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .Clock {
+    padding: 0 8px;
+
+    .clock__container .clock_time .clock__item {
+      padding: 8px 1px 0;
+
+      .clock__item-block span {
+        font-size: 22px;
+      }
+
+      p {
+        font-size: 12px;
       }
     }
   }

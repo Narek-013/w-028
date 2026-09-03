@@ -7,7 +7,8 @@ const FADE_DURATION_MS = 1200;
 const FADE_BEFORE_END_SEC = 0.9;
 
 const Intro = ({ onFadeStart, onComplete }) => {
-  const [started, setStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [mediaVisible, setMediaVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
   const videoRef = useRef(null);
   const exitStartedRef = useRef(false);
@@ -26,19 +27,29 @@ const Intro = ({ onFadeStart, onComplete }) => {
     onFadeStart?.();
   }, [onFadeStart]);
 
+  useEffect(() => {
+    videoRef.current?.load();
+  }, []);
+
   const handleStart = async () => {
-    setStarted(true);
+    const video = videoRef.current;
+    if (!video || isPlaying || exiting) return;
 
-    requestAnimationFrame(async () => {
-      const video = videoRef.current;
-      if (!video) return;
+    setIsPlaying(true);
 
-      try {
-        await video.play();
-      } catch {
-        // autoplay may be blocked; user already tapped to start
-      }
-    });
+    const revealVideo = () => {
+      setMediaVisible(true);
+      video.removeEventListener("playing", revealVideo);
+    };
+
+    video.addEventListener("playing", revealVideo);
+
+    try {
+      await video.play();
+    } catch {
+      video.removeEventListener("playing", revealVideo);
+      setIsPlaying(false);
+    }
   };
 
   const handleTimeUpdate = () => {
@@ -71,32 +82,28 @@ const Intro = ({ onFadeStart, onComplete }) => {
 
   return (
     <div
-      className={`intro ${started ? "intro--video" : "intro--poster"} ${exiting ? "intro--exiting" : ""}`}
-      onClick={!started ? handleStart : undefined}
+      className={`intro ${isPlaying ? "intro--playing" : "intro--poster"} ${mediaVisible ? "intro--media-visible" : ""} ${exiting ? "intro--exiting" : ""}`}
+      onClick={!isPlaying ? handleStart : undefined}
       onKeyDown={
-        !started
+        !isPlaying
           ? (e) => {
               if (e.key === "Enter" || e.key === " ") handleStart();
             }
           : undefined
       }
       onTransitionEnd={handleTransitionEnd}
-      role={!started ? "button" : undefined}
-      tabIndex={!started ? 0 : undefined}
-      aria-label={!started ? "Սեղմեք վիդեոն դիտելու համար" : undefined}
+      role={!isPlaying ? "button" : undefined}
+      tabIndex={!isPlaying ? 0 : undefined}
+      aria-label={!isPlaying ? "Սեղմեք վիդեոն դիտելու համար" : undefined}
     >
-      {!started ? (
-        <>
-          <p className="intro__hint">Սեղմեք</p>
-          <img src={POSTER_SRC} alt="" className="intro__poster" />
-        </>
-      ) : (
+      <div className="intro__media">
         <video
           ref={videoRef}
           className="intro__video"
           src={VIDEO_SRC}
+          poster={POSTER_SRC}
           playsInline
-          autoPlay
+          preload="auto"
           disablePictureInPicture
           controls={false}
           controlsList="nodownload noplaybackrate nofullscreen noremoteplayback"
@@ -104,7 +111,10 @@ const Intro = ({ onFadeStart, onComplete }) => {
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleVideoEnd}
         />
-      )}
+        <img src={POSTER_SRC} alt="" className="intro__poster" aria-hidden="true" />
+      </div>
+
+      {!isPlaying && <p className="intro__hint">Սեղմեք</p>}
     </div>
   );
 };

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Confirm from "./components/Confirm/Confirm";
-import Location from "./components/Location/Location";
 import MainSection from "./components/MainSection/MainSection";
 import GuestInvite from "./components/GuestInvite/GuestInvite";
-import Timing from "./components/Timing/Timing";
+import LoveStoryblock from "./components/LoveStoryblock/LoveStoryblock";
 import Sound from "./components/Sound/Sound";
 import Locations from "./components/Locations/Locations";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
@@ -11,8 +10,8 @@ import Intro from "./components/Intro/Intro";
 import "./App.css";
 
 function App() {
-  const [showIntro, setShowIntro] = useState(false);
-  const [contentVisible, setContentVisible] = useState(true);
+  const [showIntro, setShowIntro] = useState(true);
+  const [contentVisible, setContentVisible] = useState(false);
 
   useEffect(() => {
     if (!showIntro) return;
@@ -77,12 +76,11 @@ function App() {
       <LanguageSwitcher />
       <Sound />
       <div className="App_content">
-      {/* <Clock /> */}
+        <LoveStoryblock/>
       <GuestInvite />
       <MainSection />
       {/* <WeddingDate /> */}
-      <Location />
-      <Locations/>
+      {/* <Locations/> */}
       <Confirm />
       </div>
     </div>

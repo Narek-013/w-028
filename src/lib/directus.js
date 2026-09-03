@@ -101,3 +101,21 @@ export async function fetchGuestInviteTranslations(languageCode) {
   const result = await directusFetch(`/items/guest_invite_translations?${params}`);
   return result.data?.[0] ?? null;
 }
+
+export async function fetchClockTranslations(languageCode) {
+  const params = new URLSearchParams({
+    "filter[language][code][_eq]": languageCode,
+    fields: [
+      "id",
+      "label_days",
+      "label_hours",
+      "label_minutes",
+      "label_seconds",
+      "language.code",
+    ].join(","),
+    limit: "1",
+  });
+
+  const result = await directusFetch(`/items/clock_translations?${params}`);
+  return result.data?.[0] ?? null;
+}

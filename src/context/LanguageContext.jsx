@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { fetchCalendarTranslations, fetchGuestInviteTranslations, fetchLanguages } from "../lib/directus";
+import { fetchCalendarTranslations, fetchClockTranslations, fetchGuestInviteTranslations, fetchLanguages } from "../lib/directus";
 
 const STORAGE_KEY = "wedding_locale";
 
@@ -12,6 +12,7 @@ export function LanguageProvider({ children }) {
   );
   const [calendarTranslations, setCalendarTranslations] = useState(null);
   const [guestInviteTranslations, setGuestInviteTranslations] = useState(null);
+  const [clockTranslations, setClockTranslations] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -54,16 +55,19 @@ export function LanguageProvider({ children }) {
     localStorage.setItem(STORAGE_KEY, languageCode);
     setCalendarTranslations(null);
     setGuestInviteTranslations(null);
+    setClockTranslations(null);
 
     async function loadTranslations() {
       try {
-        const [calendar, guestInvite] = await Promise.all([
+        const [calendar, guestInvite, clock] = await Promise.all([
           fetchCalendarTranslations(languageCode),
           fetchGuestInviteTranslations(languageCode),
+          fetchClockTranslations(languageCode),
         ]);
         if (!cancelled) {
           setCalendarTranslations(calendar);
           setGuestInviteTranslations(guestInvite);
+          setClockTranslations(clock);
         }
       } catch (err) {
         if (!cancelled) setError(err.message);
@@ -88,11 +92,12 @@ export function LanguageProvider({ children }) {
       currentLanguage,
       calendarTranslations,
       guestInviteTranslations,
+      clockTranslations,
       loading,
       error,
       setLanguageCode,
     }),
-    [languages, languageCode, currentLanguage, calendarTranslations, guestInviteTranslations, loading, error],
+    [languages, languageCode, currentLanguage, calendarTranslations, guestInviteTranslations, clockTranslations, loading, error],
   );
 
   return (
