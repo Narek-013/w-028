@@ -68,6 +68,56 @@ export async function createRsvp(data) {
   });
 }
 
+export async function fetchRsvpById(id) {
+  if (!id) return null;
+
+  const DIRECTUS_URL = getDirectusUrl();
+  if (!DIRECTUS_URL) {
+    throw new Error("VITE_DIRECTUS_URL is not configured");
+  }
+
+  const response = await fetch(
+    `${DIRECTUS_URL}/items/${COLLECTION}/${id}?fields=id,name,last_name,attending,guest_count`,
+    { headers: getHeaders() },
+  );
+
+  if (response.status === 403 || response.status === 401) {
+    throw new Error("RSVP read is not permitted");
+  }
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      result.errors?.[0]?.message ||
+        result.message ||
+        `Request failed (${response.status})`,
+    );
+  }
+
+  return result.data ?? null;
+}
+
+export async function findRsvpByName(name, lastName) {
+  try {
+    const params = new URLSearchParams({
+      "filter[name][_eq]": name,
+      "filter[last_name][_eq]": lastName,
+      fields: "id,name,last_name,attending,guest_count",
+      limit: "1",
+    });
+
+    const result = await directusFetch(`/items/${COLLECTION}?${params}`);
+    return result.data?.[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchLanguages() {
   const params = new URLSearchParams({
     "filter[enable][_eq]": "true",

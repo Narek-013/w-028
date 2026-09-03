@@ -1,0 +1,22 @@
+{
+  "name": "Narek-Elen",
+  "short_name": "Narek-Elen",
+  "description": "Մեր հրավիրատոմսը",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#b9a07e",
+  "theme_color": "#b9a07e",
+  "icons": [
+    {
+      "src": "/app-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
