@@ -1,18 +1,13 @@
 import { useEffect, useState } from "react";
 import "../../App.css";
 import "./Confirm.scss";
-import {
-  createRsvp,
-  fetchRsvpById,
-  findRsvpByName,
-} from "../../lib/directus";
+import { createRsvp, findRsvpByName } from "../../lib/directus";
 import { useLanguage } from "../../context/LanguageContext";
 import { ARMENIAN_FALLBACKS } from "../../lib/armenianFallbacks";
 import { resolveTranslations } from "../../lib/resolveTranslations";
 
 const NAME_PATTERN = "^[A-Za-zԱ-Ֆա-ֆЁёА-Яа-я]{2,}$";
 const NAME_REGEX = new RegExp(NAME_PATTERN);
-const RSVP_STORAGE_KEY = "invitation_rsvp_id";
 
 const Confirm = () => {
   const { languageCode, confirmTranslations } = useLanguage();
@@ -25,7 +20,6 @@ const Confirm = () => {
   const [inp, setInp] = useState(false);
   const [sendBtn, setSendBtn] = useState(false);
   const [userCome, setUserCome] = useState(false);
-  const [checking, setChecking] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -34,47 +28,26 @@ const Confirm = () => {
     gender: "",
   });
 
+  // If this name + surname already exists in CMS, treat as confirmed
   useEffect(() => {
+    const name = formData.name.trim();
+    const lastName = formData.lastName.trim();
+
+    if (!NAME_REGEX.test(name) || !NAME_REGEX.test(lastName)) return;
+
     let cancelled = false;
-
-    async function verifyExistingRsvp() {
-      const storedId = localStorage.getItem(RSVP_STORAGE_KEY);
-      if (!storedId) {
-        if (!cancelled) setChecking(false);
-        return;
+    const timer = setTimeout(async () => {
+      const existing = await findRsvpByName(name, lastName);
+      if (!cancelled && existing?.id) {
+        setUserCome(true);
       }
+    }, 400);
 
-      try {
-        const existing = await fetchRsvpById(storedId);
-        if (cancelled) return;
-
-        if (existing?.id) {
-          setUserCome(true);
-        } else {
-          // CMS has no such RSVP — allow form again
-          localStorage.removeItem(RSVP_STORAGE_KEY);
-          setUserCome(false);
-        }
-      } catch {
-        // If CMS is unreachable / read blocked, keep confirmed state by stored id
-        if (!cancelled) setUserCome(true);
-      }
-
-      if (!cancelled) setChecking(false);
-    }
-
-    verifyExistingRsvp();
     return () => {
       cancelled = true;
+      clearTimeout(timer);
     };
-  }, []);
-
-  const markConfirmed = (rsvpId) => {
-    if (rsvpId) {
-      localStorage.setItem(RSVP_STORAGE_KEY, rsvpId);
-    }
-    setUserCome(true);
-  };
+  }, [formData.name, formData.lastName]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,20 +84,17 @@ const Confirm = () => {
     try {
       const existing = await findRsvpByName(name, lastName);
       if (existing?.id) {
-        markConfirmed(existing.id);
+        setUserCome(true);
         return;
       }
 
       const attending = formData.confirm === "true";
-      const payload = {
+      await createRsvp({
         name,
         last_name: lastName,
         attending,
         guest_count: attending ? countNumber : null,
-      };
-
-      const result = await createRsvp(payload);
-      const createdId = result?.data?.id;
+      });
 
       setFormData({
         name: "",
@@ -133,8 +103,7 @@ const Confirm = () => {
         confirm: "",
         gender: "",
       });
-
-      markConfirmed(createdId);
+      setUserCome(true);
     } catch (error) {
       alert(`${labels.error_send}: ${error.message}`);
       setSendBtn(true);
@@ -156,8 +125,8 @@ const Confirm = () => {
         <div className="confirm-context">
           <p>{labels.intro}</p>
 
-          {!checking && !userCome && <h3>{labels.deadline}</h3>}
-          {checking ? null : userCome ? (
+          {!userCome && <h3>{labels.deadline}</h3>}
+          {userCome ? (
             <h3>{labels.already_confirmed}</h3>
           ) : (
             <form onSubmit={handleSubmit}>

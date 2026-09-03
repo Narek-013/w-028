@@ -2,7 +2,7 @@ import { readSettings, updateSettings } from '@directus/sdk';
 import { ensureUploadedFileId } from './_helpers.js';
 
 const TARGET_PROJECT_COLOR = process.env.DEFAULT_PROJECT_COLOR || '#355C8C';
-const TARGET_PROJECT_NAME = process.env.DEFAULT_PROJECT_NAME || 'ISAA-Default';
+const TARGET_PROJECT_NAME = process.env.DEFAULT_PROJECT_NAME || 'Narek Elen';
 // Desired project logo (SVG file id under `directus/uploads/<id>.svg`)
 const TARGET_PROJECT_LOGO_ID = '85ec1ef8-805e-4c70-8354-c897d3565181';
 

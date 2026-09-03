@@ -20,8 +20,8 @@ const LOCATION_EVENTS = [
   {
     icon: Imgs.glass_icon,
     placeImg: Imgs.restaurant,
-    lat: 40.164644,
-    lon: 44.391369,
+    lat: 40.137582,
+    lon: 44.460454,
     timeKey: "event_2_time",
     eventKey: "event_2_title",
     placeKey: "event_2_place",
