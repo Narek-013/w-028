@@ -1,0 +1,18 @@
+.Location {
+  width: 100%;
+  padding: 60px 20px;
+  background-color: rgb(185, 160, 126);
+}
+.Location .Location_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 70px;
+}
+.Location .Location_container h2 {
+  font-size: 36px;
+  text-align: center;
+  font-style: normal;
+  font-weight: 500;
+  color: oklch(97% 0.012 80deg);
+}/*# sourceMappingURL=Location.css.map */

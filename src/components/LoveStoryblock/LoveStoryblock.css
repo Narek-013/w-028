@@ -1,0 +1,91 @@
+.LoveStoryblock {
+  width: 100%;
+  line-height: 0;
+  font-size: 0;
+  background-color: transparent;
+}
+.LoveStoryblock .LoveStoryblock_sequence {
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #000;
+}
+.LoveStoryblock .LoveStoryblock_segment {
+  position: relative;
+  overflow: hidden;
+}
+.LoveStoryblock .LoveStoryblock_segment + .LoveStoryblock .LoveStoryblock_segment {
+  margin-top: -1px;
+}
+.LoveStoryblock .LoveStoryblock_segment--top::after {
+  z-index: 1;
+}
+.LoveStoryblock .LoveStoryblock_title {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 20px;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-align: center;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 20px rgb(0, 0, 0);
+  pointer-events: none;
+}
+.LoveStoryblock .LoveStoryblock_segment--top .LoveStoryblock_video,
+.LoveStoryblock .LoveStoryblock_segment--bottom .LoveStoryblock_video {
+  opacity: 0.72;
+  filter: blur(1px) saturate(0.85) brightness(0.93);
+  transform: scale(1.03);
+}
+.LoveStoryblock .LoveStoryblock_segment--top::after,
+.LoveStoryblock .LoveStoryblock_segment--bottom::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.LoveStoryblock .LoveStoryblock_segment--top::after {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.08) 100%);
+}
+.LoveStoryblock .LoveStoryblock_segment--bottom::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.08) 100%);
+}
+.LoveStoryblock .LoveStoryblock_segment--focus {
+  z-index: 2;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
+}
+.LoveStoryblock .LoveStoryblock_segment--focus .LoveStoryblock_video {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+.LoveStoryblock .LoveStoryblock_video {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  -webkit-touch-callout: none;
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+}
+.LoveStoryblock .LoveStoryblock_video::-webkit-media-controls, .LoveStoryblock .LoveStoryblock_video::-webkit-media-controls-enclosure {
+  display: none !important;
+}/*# sourceMappingURL=LoveStoryblock.css.map */

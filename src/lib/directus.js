@@ -1,6 +1,24 @@
-const DIRECTUS_URL = import.meta.env.VITE_DIRECTUS_URL?.replace(/\/$/, "");
 const DIRECTUS_TOKEN = import.meta.env.VITE_DIRECTUS_TOKEN;
 const COLLECTION = import.meta.env.VITE_DIRECTUS_COLLECTION || "rsvp";
+
+function getDirectusUrl() {
+  const configured = import.meta.env.VITE_DIRECTUS_URL?.replace(/\/$/, "") || "";
+  const pageHost = window.location.hostname;
+  const isLanPage = pageHost !== "localhost" && pageHost !== "127.0.0.1";
+
+  if (import.meta.env.DEV && isLanPage) {
+    return `${window.location.origin}/directus`;
+  }
+
+  return configured;
+}
+
+function getFileId(file) {
+  if (!file) return null;
+  if (typeof file === "string") return file;
+  if (typeof file === "object" && typeof file.id === "string") return file.id;
+  return null;
+}
 
 function getHeaders() {
   return {
@@ -10,6 +28,7 @@ function getHeaders() {
 }
 
 async function directusFetch(path, options = {}) {
+  const DIRECTUS_URL = getDirectusUrl();
   if (!DIRECTUS_URL) {
     throw new Error("VITE_DIRECTUS_URL is not configured");
   }
@@ -35,7 +54,9 @@ async function directusFetch(path, options = {}) {
   return result;
 }
 
-export function getAssetUrl(fileId) {
+export function getAssetUrl(file) {
+  const DIRECTUS_URL = getDirectusUrl();
+  const fileId = getFileId(file);
   if (!DIRECTUS_URL || !fileId) return null;
   return `${DIRECTUS_URL}/assets/${fileId}`;
 }
@@ -51,7 +72,7 @@ export async function fetchLanguages() {
   const params = new URLSearchParams({
     "filter[enable][_eq]": "true",
     sort: "sort",
-    fields: "id,code,name,locale_code,default,flag",
+    fields: "id,code,name,locale_code,default,flag.id",
   });
 
   const result = await directusFetch(`/items/languages?${params}`);
@@ -118,4 +139,80 @@ export async function fetchClockTranslations(languageCode) {
 
   const result = await directusFetch(`/items/clock_translations?${params}`);
   return result.data?.[0] ?? null;
+}
+
+export async function fetchLocationTranslations(languageCode) {
+  const params = new URLSearchParams({
+    "filter[language][code][_eq]": languageCode,
+    fields: [
+      "id",
+      "section_title",
+      "map_button",
+      "event_1_time",
+      "event_1_title",
+      "event_1_place",
+      "event_2_time",
+      "event_2_title",
+      "event_2_place",
+      "language.code",
+    ].join(","),
+    limit: "1",
+  });
+
+  const result = await directusFetch(`/items/location_translations?${params}`);
+  return result.data?.[0] ?? null;
+}
+
+export async function fetchDressCodeTranslations(languageCode) {
+  const params = new URLSearchParams({
+    "filter[language][code][_eq]": languageCode,
+    fields: ["id", "title", "body", "language.code"].join(","),
+    limit: "1",
+  });
+
+  const result = await directusFetch(`/items/dress_code_translations?${params}`);
+  return result.data?.[0] ?? null;
+}
+
+export async function fetchConfirmTranslations(languageCode) {
+  const params = new URLSearchParams({
+    "filter[language][code][_eq]": languageCode,
+    fields: [
+      "id",
+      "title",
+      "intro",
+      "deadline",
+      "already_confirmed",
+      "placeholder_name",
+      "placeholder_surname",
+      "placeholder_guests",
+      "attendance_question",
+      "attend_yes",
+      "attend_no",
+      "submit",
+      "name_hint",
+      "error_name",
+      "error_count",
+      "error_send",
+      "language.code",
+    ].join(","),
+    limit: "1",
+  });
+
+  const result = await directusFetch(`/items/confirm_translations?${params}`);
+  return result.data?.[0] ?? null;
+}
+
+export async function fetchAllTranslationsForLanguage(languageCode) {
+  const [calendar, guestInvite, clock, location, dressCode, confirm] =
+    await Promise.all([
+      fetchCalendarTranslations(languageCode),
+      fetchGuestInviteTranslations(languageCode),
+      fetchClockTranslations(languageCode),
+      fetchLocationTranslations(languageCode),
+      fetchDressCodeTranslations(languageCode),
+      fetchConfirmTranslations(languageCode),
+    ]);
+
+  return { calendar, guestInvite, clock, location, dressCode, confirm };
 }

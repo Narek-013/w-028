@@ -1,0 +1,38 @@
+.TimingItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  max-width: 610px;
+  justify-content: space-between;
+}
+.TimingItem:nth-of-type(2) {
+  display: flex;
+  justify-content: end;
+}
+.TimingItem .timing-info {
+  width: 100%;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding-top: 50px;
+}
+.TimingItem .timing-info h3 {
+  text-align: start;
+  font-size: 45px;
+}
+.TimingItem .timing-info h4 {
+  text-align: center;
+  font-weight: 500;
+  font-size: 22px;
+}
+.TimingItem .timing-info p {
+  position: absolute;
+  top: 0;
+  font-size: 70px;
+  font-weight: 600;
+  color: rgb(214, 206, 198);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  z-index: -1;
+}/*# sourceMappingURL=TimingItem.css.map */

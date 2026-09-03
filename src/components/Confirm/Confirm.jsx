@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
 import "../../App.css";
-import AdsFooter from "../AdsFooter/AdsFooter";
 import "./Confirm.scss";
 import { createRsvp } from "../../lib/directus";
+import { useLanguage } from "../../context/LanguageContext";
+import { ARMENIAN_FALLBACKS } from "../../lib/armenianFallbacks";
+import { resolveTranslations } from "../../lib/resolveTranslations";
+
+const NAME_PATTERN = "^[A-Za-zԱ-Ֆա-ֆЁёА-Яа-я]{2,}$";
+const NAME_REGEX = new RegExp(NAME_PATTERN);
 
 const Confirm = () => {
+  const { languageCode, confirmTranslations } = useLanguage();
+  const labels = resolveTranslations(
+    languageCode,
+    confirmTranslations,
+    ARMENIAN_FALLBACKS.confirm,
+  );
+
   const [inp, setInp] = useState(false);
   const [sendBtn, setSendBtn] = useState(false);
   const [userCome, setUserCome] = useState(false);
@@ -38,21 +50,19 @@ const Confirm = () => {
       setSendBtn(false);
     }
   };
-  
+
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
-    const nameRegex = /^[A-Za-zԱ-Ֆա-ֆ]{2,}$/;
-
-    if (!nameRegex.test(formData.name.trim()) || !nameRegex.test(formData.lastName.trim())) {
-      alert("The name and the surname must include only letters and consist of one word");
+    if (!NAME_REGEX.test(formData.name.trim()) || !NAME_REGEX.test(formData.lastName.trim())) {
+      alert(labels.error_name);
       return;
     }
 
     const countNumber = parseInt(formData.count);
     if (inp) {
       if (isNaN(countNumber) || countNumber < 1 || countNumber > 99) {
-        alert("Fill in the right number of guests: 1-99։");
+        alert(labels.error_count);
         return;
       }
     }
@@ -79,7 +89,7 @@ const Confirm = () => {
       localStorage.setItem("invitation_user", JSON.stringify(true));
       setUserCome(true);
     } catch (error) {
-      alert(`Failed to send RSVP: ${error.message}`);
+      alert(`${labels.error_send}: ${error.message}`);
       setSendBtn(true);
     }
   };
@@ -95,37 +105,37 @@ const Confirm = () => {
   return (
     <div className="Confirm">
       <div className="Confirm_container container">
-        <h2>R S V P</h2>
+        <h2>{labels.title}</h2>
         <div className="confirm-context">
-          <p>Your participation is very important to us, so please fill out this form with your response.</p>
+          <p>{labels.intro}</p>
 
-          {!userCome && <h3>We will be waiting for your reply until 01.01.2026 </h3>}
+          {!userCome && <h3>{labels.deadline}</h3>}
           {userCome ? (
-            <h3>You have already confirmed your participation</h3>
+            <h3>{labels.already_confirmed}</h3>
           ) : (
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
-                placeholder="name"
+                placeholder={labels.placeholder_name}
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                pattern="^[A-Za-zԱ-Ֆա-ֆ]{2,}$"
-                title="Only letters, without spaces"
+                pattern={NAME_PATTERN}
+                title={labels.name_hint}
               />
               <input
                 type="text"
-                placeholder="surname"
+                placeholder={labels.placeholder_surname}
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
                 required
-                pattern="^[A-Za-zԱ-Ֆա-ֆ]{2,}$"
-                title="Only letters, without spaces"
+                pattern={NAME_PATTERN}
+                title={labels.name_hint}
               />
 
-              <p>Please indicate your attendance availability</p>
+              <p>{labels.attendance_question}</p>
               <label htmlFor="confirm_true">
                 <input
                   type="radio"
@@ -138,7 +148,7 @@ const Confirm = () => {
                     handleInp(ev);
                   }}
                 />
-                - I will gladly attend
+                {` - ${labels.attend_yes}`}
               </label>
 
               <label htmlFor="confirm_false">
@@ -153,14 +163,14 @@ const Confirm = () => {
                     handleInp(ev);
                   }}
                 />
-                - Unfortunately, I won’t be able to attend
+                {` - ${labels.attend_no}`}
               </label>
 
               {inp && (
                 <input
                   type="number"
                   name="count"
-                  placeholder="number of guests"
+                  placeholder={labels.placeholder_guests}
                   value={formData.count}
                   onChange={handleChange}
                   required
@@ -170,12 +180,11 @@ const Confirm = () => {
                 />
               )}
               <button type="submit" className={`${!sendBtn && "disabled"}`}>
-                Send
+                {labels.submit}
               </button>
             </form>
           )}
         </div>
-        {/* <AdsFooter /> */}
       </div>
     </div>
   );

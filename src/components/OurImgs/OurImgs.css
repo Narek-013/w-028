@@ -1,0 +1,73 @@
+.OurImgs {
+  width: 100%;
+  padding: 40px 20px 80px;
+  color: oklch(97% 0.012 80deg);
+  background-color: rgb(185, 160, 126);
+}
+.OurImgs .OurImgs_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+.OurImgs .OurImgs_heart {
+  width: 40px;
+  height: 40px;
+  display: block;
+  animation: OurImgs_float 3s ease-in-out infinite;
+}
+.OurImgs .OurImgs_slider {
+  width: 100%;
+  overflow: hidden;
+}
+.OurImgs .OurImgs_track {
+  display: flex;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.OurImgs .OurImgs_slide {
+  flex: 0 0 100%;
+  margin: 0;
+}
+.OurImgs .OurImgs_slide img {
+  display: block;
+  width: 100%;
+  height: 420px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.55));
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+@media (max-width: 430px) {
+  .OurImgs .OurImgs_slide img {
+    height: 320px;
+  }
+}
+.OurImgs .OurImgs_dots {
+  display: flex;
+  gap: 10px;
+}
+.OurImgs .OurImgs_dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  background: currentColor;
+  opacity: 0.35;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.OurImgs .OurImgs_dot.is-active {
+  opacity: 1;
+  transform: scale(1.25);
+}
+
+@keyframes OurImgs_float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}/*# sourceMappingURL=OurImgs.css.map */

@@ -1,0 +1,128 @@
+.Confirm {
+  width: 100%;
+  padding: 60px 20px;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(0, 0, 0);
+}
+.Confirm .Confirm_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+.Confirm .Confirm_container > img {
+  width: 100%;
+  max-width: 350px;
+  filter: drop-shadow(0 0 5px rgb(76, 76, 76));
+}
+.Confirm .Confirm_container h2 {
+  font-size: 34px;
+  font-weight: 600;
+  text-align: center;
+  max-width: 500px;
+  font-style: italic;
+  font-weight: 500;
+}
+@media (max-width: 420px) {
+  .Confirm .Confirm_container h2 {
+    font-size: 32px;
+  }
+}
+.Confirm .Confirm_container .confirm-context {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+.Confirm .Confirm_container .confirm-context > p {
+  font-size: 20px;
+  max-width: 540px;
+  text-align: center;
+  margin: 20px 0;
+}
+.Confirm .Confirm_container .confirm-context form {
+  display: flex;
+  flex-direction: column;
+}
+.Confirm .Confirm_container .confirm-context h3 {
+  font-size: 22px;
+  text-align: center;
+  max-width: 500px;
+  font-style: italic;
+  font-weight: 600;
+}
+.Confirm .Confirm_container .confirm-context form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.Confirm .Confirm_container .confirm-context form input {
+  border: none;
+  border-bottom: 1px solid rgb(255, 216, 180);
+  padding: 8px 10px;
+  background-color: transparent;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(0, 0, 0);
+  outline: none;
+  font-size: 18px;
+}
+.Confirm .Confirm_container .confirm-context form input::-moz-placeholder {
+  font-size: 16px;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(0, 0, 0);
+}
+.Confirm .Confirm_container .confirm-context form input::placeholder {
+  font-size: 16px;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(0, 0, 0);
+}
+.Confirm .Confirm_container .confirm-context form p {
+  margin: 30px 0 10px;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 600;
+  text-align: center;
+}
+.Confirm .Confirm_container .confirm-context form {
+  text-align: center;
+}
+.Confirm .Confirm_container .confirm-context form label {
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.Confirm .Confirm_container .confirm-context form input[type=radio] {
+  width: 18px;
+  height: 18px;
+  accent-color: rgb(255, 216, 180);
+  margin-right: 8px;
+  cursor: pointer;
+}
+.Confirm .Confirm_container .confirm-context form button {
+  align-self: center;
+  padding: 8px 20px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 1px solid rgb(255, 216, 180);
+  background-color: transparent;
+  color: rgb(255, 216, 180);
+  cursor: pointer;
+  margin: 20px 0;
+}
+.Confirm .Confirm_container .confirm-context form button:hover {
+  background-color: rgb(255, 216, 180);
+  color: rgb(71, 71, 71);
+}
+.Confirm .Confirm_container .confirm-context form .disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.Confirm .Confirm_container h4 {
+  font-size: 28px;
+  font-style: italic;
+  max-width: 400px;
+  font-weight: 500;
+  text-align: center;
+}/*# sourceMappingURL=Confirm.css.map */

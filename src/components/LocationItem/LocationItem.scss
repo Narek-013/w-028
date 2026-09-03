@@ -3,35 +3,76 @@
   flex-direction: column;
   align-items: center;
   gap: 30px;
-    color: rgb(255, 216, 180);
-      text-shadow: 0 0 15px rgb(0, 0, 0);
-  .icon-img {
-    width: 100px;
-    animation: dropShadow 1.5s infinite;
+  transform: translate3d(0, 48px, 0);
+
+  &.is-visible {
+    animation: LocationItem_rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
-  .place-name {
-    font-size: 22px;
-    font-weight: 500;
-    text-align: center;
+
+  .location-context {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    img{
+      width: 130px;
+      animation: dropShadow 1.5s infinite;
+    }
+    .time{
+      font-size: 36px;
+      font-weight: 600;
+      text-align: center;
+      color:oklch(0.97 0.012 80)
+
+    }
+    .event {
+      font-size: 22px;
+      font-weight: 500;
+      text-align: center;
+      color:oklch(0.97 0.012 80)
+    }
+    .place-name {
+      font-weight: 700;
+      font-size: 22px;
+      text-align: center;
+      color:oklch(0.97 0.012 80)
+    }
+
   }
-  .address{
-    font-size: 18px;
-    text-align: center;
+  .place-img {
+    width: 100%;
+    max-width: 280px;
+    object-fit: cover;
+    border-radius: 15px;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, .8));
+  }
+  .church{
     max-width: 250px;
   }
+  button {
+    background-color: transparent;
+    border: 2px solid rgb(255, 216, 180);
+    color:oklch(0.97 0.012 80);
+    font-weight: 500;
+    font-size: 22px;
+    border-radius: 30px;
+    text-decoration: none;
+    padding: 10px 60px;
+    transition: all .5s;
+    cursor: pointer;
+    &:hover {
+      background-color: rgb(35, 35, 35);
+      color: #f7f4f1;
+    }
+  }
 }
 
-button {
-  background-color: rgb(255, 216, 180);
-  border: 1px solid rgb(255, 216, 180);
-  color: rgb(35, 35, 35);
-  font-weight: 500;
-  font-size: 22px;
-  border-radius: 30px;
-  text-decoration: none;
-  padding: 10px 60px;
-  transition: all 0.5s;
-  cursor: pointer;
+@keyframes LocationItem_rise {
+  from {
+    transform: translate3d(0, 48px, 0);
+  }
 
+  to {
+    transform: translate3d(0, 0, 0);
+  }
 }
-

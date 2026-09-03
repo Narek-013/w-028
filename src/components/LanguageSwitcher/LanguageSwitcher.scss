@@ -1,8 +1,8 @@
 .LanguageSwitcher {
   position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 100;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  z-index: 10000;
 
   .LanguageSwitcher_trigger {
     display: flex;
@@ -15,7 +15,7 @@
     backdrop-filter: blur(6px);
     color: rgb(255, 216, 180);
     cursor: pointer;
-    font-family: inherit;
+    font-family: "Colonna", sans-serif;
     transition: border-color 0.2s ease, background 0.2s ease;
 
     &:hover,
@@ -42,6 +42,7 @@
     border-radius: 50%;
     background: rgba(255, 216, 180, 0.15);
     font-size: 10px;
+    font-family: "Colonna", sans-serif;
     flex-shrink: 0;
   }
 

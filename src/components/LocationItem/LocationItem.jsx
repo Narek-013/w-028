@@ -1,58 +1,76 @@
+import { useEffect, useRef } from "react";
 import "../../App.css";
 import "./LocationItem.scss";
-import { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 const LocationItem = ({
   placeName,
-  address,
+  placeImg,
   lat,
   lon,
+  icon,
+  time,
+  event,
+  placeImgClass,
+  mapButtonLabel = "Քարտեզ",
 }) => {
+  const itemRef = useRef(null);
+
   useEffect(() => {
-    AOS.init({
-      offset: 120, // offset (in px) from the original trigger point
-      delay: 0, // values from 0 to 3000, with step 50ms
-      duration: 400, // values from 0 to 3000, with step 50ms
-      easing: "ease", // default easing for AOS animations
-      once: false, // whether animation should happen only once
-      mirror: false, // whether elements should animate out while scrolling past them
-      anchorPlacement: "top-bottom", // whether animation should happen only once - while scrolling down (optional)
-    });
+    const el = itemRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(el);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            el.classList.add("is-visible");
+          });
+        });
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
-  
+
   const getNavigationLink = () => {
     const yandexNavi = `yandexnavi://build_route_on_map?lat_to=${lat}&lon_to=${lon}`;
-    const yandexWeb = `https://yandex.com/maps/?rtext=~${lat},${lon}&rtt=auto`;
     const googleMaps = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
 
-    // Սա fallback տարբերակ է՝ եթե Yandex.Navigator-ը բացել չհաջողվի, օգտատերը կարող է Google Maps-ով գնալ
     return {
       primary: yandexNavi,
       fallback: googleMaps,
-      web: yandexWeb,
     };
   };
   const { primary, fallback } = getNavigationLink();
 
   return (
-    <div className="LocationItem" data-aos="fade-up">
-        <p className="place-name">{placeName}</p> 
-        <p className="address">{address}</p>
-      {/* <a href={location}>Քարտեզ</a> */}
+    <div className="LocationItem" ref={itemRef}>
+      <div className="location-context">
+        <img src={icon} alt="wedding-icon" />
+        <p className="time">{time}</p>
+        <p className="event">{event}</p>
+        <p className="place-name">{placeName}</p>
+      </div>
+      <img
+        className={`place-img ${placeImgClass ?? ""}`}
+        src={placeImg}
+        alt=""
+      />
       <button
+        type="button"
         onClick={() => {
-          // Attempt to open Yandex.Navigator
           window.location.href = primary;
 
-          // If not opened within 1.5s, redirect to Google Maps
           setTimeout(() => {
             window.location.href = fallback;
           }, 1500);
         }}
       >
-        Map
+        {mapButtonLabel}
       </button>
     </div>
   );

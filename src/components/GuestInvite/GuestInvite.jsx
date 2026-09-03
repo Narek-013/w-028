@@ -1,35 +1,22 @@
 import { useEffect, useRef } from "react";
 import "../../App.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { ARMENIAN_FALLBACKS } from "../../lib/armenianFallbacks";
+import { resolveTranslations } from "../../lib/resolveTranslations";
 import "./GuestInvite.scss";
-
-const FALLBACK_TRANSLATIONS = {
-  hy: {
-    title: "Հարգելի՛ հյուրեր",
-    body:
-      "Այս տարվա օրերից մեկը մեզ համար առանձնահատուկ է լինելու, և մենք ցանկանում ենք այն անցկացնել մեր հարազատների ու ընկերների շրջապատում։ Մեծ սիրով հրավիրում ենք ձեզ ամենահուզիչ տոնին՝ մեր հարսանիքին։",
-  },
-  en: {
-    title: "Dear guests",
-    body:
-      "One of the days this year will be special for us, and we want to spend it surrounded by our relatives and friends. With great love, we invite you to the most exciting celebration — our wedding.",
-  },
-  ru: {
-    title: "Дорогие гости",
-    body:
-      "Один из дней этого года будет особенным для нас, и мы хотим провести его в окружении наших родных и друзей. С большой любовью приглашаем вас на самый волнующий праздник — нашу свадьбу.",
-  },
-};
 
 const GuestInvite = () => {
   const { languageCode, guestInviteTranslations } = useLanguage();
   const headerRef = useRef(null);
   const textRef = useRef(null);
 
-  const fallback =
-    FALLBACK_TRANSLATIONS[languageCode] ?? FALLBACK_TRANSLATIONS.hy;
-  const title = guestInviteTranslations?.title ?? fallback.title;
-  const body = guestInviteTranslations?.body ?? fallback.body;
+  const labels = resolveTranslations(
+    languageCode,
+    guestInviteTranslations,
+    ARMENIAN_FALLBACKS.guestInvite,
+  );
+  const title = labels.title;
+  const body = labels.body;
 
   useEffect(() => {
     const elements = [headerRef.current, textRef.current].filter(Boolean);

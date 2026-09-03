@@ -1,0 +1,97 @@
+.LanguageSwitcher {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+}
+.LanguageSwitcher .LanguageSwitcher_trigger {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 216, 180, 0.35);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  color: rgb(255, 216, 180);
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.LanguageSwitcher .LanguageSwitcher_trigger:hover, .LanguageSwitcher.is-open .LanguageSwitcher .LanguageSwitcher_trigger {
+  border-color: rgba(255, 216, 180, 0.7);
+  background: rgba(0, 0, 0, 0.6);
+}
+.LanguageSwitcher .LanguageSwitcher_flag {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  flex-shrink: 0;
+}
+.LanguageSwitcher .LanguageSwitcher_code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 216, 180, 0.15);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.LanguageSwitcher .LanguageSwitcher_chevron {
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid rgb(255, 216, 180);
+  border-bottom: 2px solid rgb(255, 216, 180);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.LanguageSwitcher.is-open .LanguageSwitcher_chevron {
+  transform: rotate(-135deg) translateY(-2px);
+}
+.LanguageSwitcher .LanguageSwitcher_menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid rgba(255, 216, 180, 0.35);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  animation: LanguageSwitcher_fadeIn 0.15s ease;
+}
+.LanguageSwitcher .LanguageSwitcher_option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.LanguageSwitcher .LanguageSwitcher_option:hover {
+  background: rgba(255, 216, 180, 0.12);
+}
+.LanguageSwitcher .LanguageSwitcher_option.is-active .LanguageSwitcher_flag, .LanguageSwitcher .LanguageSwitcher_option.is-active .LanguageSwitcher_code {
+  box-shadow: 0 0 0 2px rgb(255, 216, 180);
+}
+
+@keyframes LanguageSwitcher_fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}/*# sourceMappingURL=LanguageSwitcher.css.map */

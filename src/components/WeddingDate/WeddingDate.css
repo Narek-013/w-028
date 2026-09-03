@@ -1,0 +1,121 @@
+.WeddingDate {
+  padding: 0 20px;
+  width: 100%;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(255, 255, 255);
+}
+.WeddingDate .WeddingDate_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+.WeddingDate .WeddingDate_container h2 {
+  font-size: 40px;
+  text-align: center;
+  font-weight: 600;
+}
+@media (max-width: 410px) {
+  .WeddingDate .WeddingDate_container h2 {
+    font-size: 34px;
+  }
+}
+.WeddingDate .WeddingDate_container .WeddingDate_container_context {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 450px;
+}
+.WeddingDate .WeddingDate_container .WeddingDate_container_context p {
+  font-size: 21px;
+  text-align: center;
+}
+.WeddingDate .WeddingDate_container table {
+  table-layout: fixed;
+  width: 360px;
+  max-width: 100%;
+}
+.WeddingDate .WeddingDate_container table col {
+  width: 14.2857142857%;
+}
+.WeddingDate .WeddingDate_container table tr th {
+  font-size: 19px;
+  padding: 12px 8px;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+@media (max-width: 470px) {
+  .WeddingDate .WeddingDate_container table tr th {
+    font-size: 18px;
+    padding: 10px 6px;
+  }
+}
+@media (max-width: 410px) {
+  .WeddingDate .WeddingDate_container table tr th {
+    font-size: 16px;
+    padding: 10px 4px;
+  }
+}
+@media (max-width: 350px) {
+  .WeddingDate .WeddingDate_container table tr th {
+    font-size: 15px;
+  }
+}
+.WeddingDate .WeddingDate_container table tr td {
+  font-size: 22px;
+  padding: 12px 10px;
+  text-align: center;
+}
+@media (max-width: 470px) {
+  .WeddingDate .WeddingDate_container table tr td {
+    padding: 10px 8px;
+  }
+}
+@media (max-width: 470px) {
+  .WeddingDate .WeddingDate_container table tr td {
+    font-size: 20px;
+    padding: 10px 4px;
+  }
+}
+.WeddingDate .WeddingDate_container table .WeddingDate_header-month {
+  font-size: 28px;
+  text-align: left;
+  letter-spacing: 4px;
+}
+.WeddingDate .WeddingDate_container table .WeddingDate_header-year {
+  font-size: 28px;
+  text-align: right;
+  letter-spacing: 4px;
+}
+.WeddingDate .WeddingDate_container table .WeddingDate_weekday {
+  padding: 10px 0;
+}
+.WeddingDate .WeddingDate_container table .WeddingDate_day--highlight {
+  color: black;
+  text-shadow: 0 0 5px white;
+  overflow: visible;
+}
+.WeddingDate .WeddingDate_container table .WeddingDate_dayContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 0;
+  min-height: 34px;
+}
+.WeddingDate .WeddingDate_container table .WeddingDate_heart {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: -1;
+  pointer-events: none;
+}
+.WeddingDate .WeddingDate_container table .WeddingDate_heart img {
+  width: 70px;
+  filter: drop-shadow(0 0 10px rgb(85, 85, 85));
+  animation: pulseShadow 1.5s infinite;
+}/*# sourceMappingURL=WeddingDate.css.map */

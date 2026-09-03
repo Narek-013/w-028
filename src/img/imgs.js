@@ -9,6 +9,11 @@ import artur_maria_restaurant from "./images/artur-maria-restaurant.jpg";
 import logo from "./images/logo.png";
 import volumeUp from "./images/volumeUp.png";
 import volumeDown from "./images/volumeDown.png";
+import rings_icon from "./images/rings-birds-icon.png";
+import glass_icon from "./images/glass-icon.png";
+import church from "./images/church-icon.png";
+import restaurant from "./images/restaurant-icon.png";
+import dress_code from "./images/just-married-icon.png";
 
 export const Imgs = {
   heart_icon,
@@ -22,4 +27,9 @@ export const Imgs = {
   logo,
   volumeUp,
   volumeDown,
+  rings_icon,
+  glass_icon,
+  church,
+  restaurant,
+  dress_code
 };

@@ -1,0 +1,61 @@
+.LocationItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+.LocationItem .location-context {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.LocationItem .location-context img {
+  width: 130px;
+  animation: dropShadow 1.5s infinite;
+}
+.LocationItem .location-context .time {
+  font-size: 36px;
+  font-weight: 600;
+  text-align: center;
+  color: oklch(97% 0.012 80deg);
+}
+.LocationItem .location-context .event {
+  font-size: 22px;
+  font-weight: 500;
+  text-align: center;
+  color: oklch(97% 0.012 80deg);
+}
+.LocationItem .location-context .place-name {
+  font-weight: 700;
+  font-size: 22px;
+  text-align: center;
+  color: oklch(97% 0.012 80deg);
+}
+.LocationItem .place-img {
+  width: 100%;
+  max-width: 280px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 15px;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
+}
+.LocationItem .church {
+  max-width: 250px;
+}
+.LocationItem button {
+  background-color: transparent;
+  border: 2px solid rgb(255, 216, 180);
+  color: oklch(97% 0.012 80deg);
+  font-weight: 500;
+  font-size: 22px;
+  border-radius: 30px;
+  text-decoration: none;
+  padding: 10px 60px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+.LocationItem button:hover {
+  background-color: rgb(35, 35, 35);
+  color: #f7f4f1;
+}/*# sourceMappingURL=LocationItem.css.map */

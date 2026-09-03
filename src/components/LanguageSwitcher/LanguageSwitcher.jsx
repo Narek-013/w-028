@@ -1,10 +1,31 @@
 import { useEffect, useRef, useState } from "react";
-import { getAssetUrl } from "../../lib/directus";
 import { useLanguage } from "../../context/LanguageContext";
 import "./LanguageSwitcher.scss";
 
+const FlagMark = ({ code }) => {
+  const [failed, setFailed] = useState(false);
+  const src = code ? `/flags/${code}.svg` : null;
+
+  if (!src || failed) {
+    return (
+      <span className="LanguageSwitcher_code">
+        {code?.toUpperCase()}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt=""
+      className="LanguageSwitcher_flag"
+      onError={() => setFailed(true)}
+    />
+  );
+};
+
 const LanguageSwitcher = () => {
-  const { languages, languageCode, currentLanguage, setLanguageCode, loading } =
+  const { availableLanguages, languageCode, currentLanguage, setLanguageCode, loading } =
     useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
@@ -30,9 +51,7 @@ const LanguageSwitcher = () => {
     };
   }, [isOpen]);
 
-  if (loading || languages.length <= 1) return null;
-
-  const currentFlagUrl = getAssetUrl(currentLanguage?.flag);
+  if (loading || availableLanguages.length <= 1) return null;
 
   const handleSelect = (code) => {
     setLanguageCode(code);
@@ -52,20 +71,13 @@ const LanguageSwitcher = () => {
         aria-expanded={isOpen}
         aria-label={currentLanguage?.name ?? "Language"}
       >
-        {currentFlagUrl ? (
-          <img src={currentFlagUrl} alt="" className="LanguageSwitcher_flag" />
-        ) : (
-          <span className="LanguageSwitcher_code">
-            {currentLanguage?.code?.toUpperCase()}
-          </span>
-        )}
+        <FlagMark code={currentLanguage?.code} />
         <span className="LanguageSwitcher_chevron" aria-hidden="true" />
       </button>
 
       {isOpen && (
         <ul className="LanguageSwitcher_menu" role="listbox">
-          {languages.map((language) => {
-            const flagUrl = getAssetUrl(language.flag);
+          {availableLanguages.map((language) => {
             const isActive = language.code === languageCode;
 
             return (
@@ -76,17 +88,7 @@ const LanguageSwitcher = () => {
                   onClick={() => handleSelect(language.code)}
                   aria-label={language.name}
                 >
-                  {flagUrl ? (
-                    <img
-                      src={flagUrl}
-                      alt=""
-                      className="LanguageSwitcher_flag"
-                    />
-                  ) : (
-                    <span className="LanguageSwitcher_code">
-                      {language.code.toUpperCase()}
-                    </span>
-                  )}
+                  <FlagMark code={language.code} />
                 </button>
               </li>
             );

@@ -1,21 +1,25 @@
 .sound {
   .sound-block {
     position: fixed;
-    right: 16px;
+    right: 18px;
     bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     z-index: 100;
-
     button {
       border: none;
       padding: 5px;
       background-color: transparent;
       cursor: pointer;
+      border: 1px solid rgb(162, 131, 89);
+      background-color: rgb(162, 131, 89);
+      border-radius: 50%;
+      padding: 12px;
+      color: oklch(0.97 0.012 80);
 
-      img {
-        width: 45px;
-        height: 45px;
+      .sound__icon {
+        width: 20px;
+        height: 20px;
+        display: block;
         filter: drop-shadow(0 0 5px white);
-      }
-    }
+      }    }
   }
 }

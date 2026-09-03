@@ -1,0 +1,116 @@
+.Clock {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 20px;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(255, 255, 255);
+}
+.Clock .clock__container {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.Clock .clock__container .clock_time {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 0;
+  margin-top: 50px;
+}
+.Clock .clock__container .clock_time .clock__item {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 15px clamp(4px, 1.5vw, 16px) 0;
+  border-left: 1px solid rgba(255, 216, 180, 0.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+.Clock .clock__container .clock_time .clock__item:first-of-type {
+  border-left: none;
+}
+.Clock .clock__container .clock_time .clock__item .clock__item-block {
+  position: relative;
+  height: clamp(44px, 12vw, 70px);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Clock .clock__container .clock_time .clock__item .clock__item-block span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(0);
+  opacity: 1;
+  text-align: center;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(255, 255, 255);
+  font-size: clamp(28px, 8vw, 60px);
+  transition: transform 0.5s ease-in-out, opacity 0.2s;
+}
+.Clock .clock__container .clock_time .clock__item .clock__item-block .new {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.Clock .clock__container .clock_time .clock__item .clock__item-block .current {
+  transform: translateY(0);
+  opacity: 1;
+}
+.Clock .clock__container .clock_time .clock__item p {
+  width: 100%;
+  max-width: 100%;
+  font-size: clamp(12px, 3.5vw, 14px);
+  font-weight: 600;
+  padding-bottom: 20px;
+  z-index: 2;
+  text-align: center;
+  color: rgb(255, 216, 180);
+  text-shadow: 0 0 15px rgb(255, 255, 255);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 360px) {
+  .Clock {
+    padding: 0 12px;
+  }
+  .Clock .clock__container .clock_time {
+    margin-top: 36px;
+  }
+  .Clock .clock__container .clock_time .clock__item {
+    padding: 10px 2px 0;
+  }
+  .Clock .clock__container .clock_time .clock__item .clock__item-block {
+    height: clamp(40px, 11vw, 52px);
+  }
+  .Clock .clock__container .clock_time .clock__item .clock__item-block span {
+    font-size: clamp(24px, 7.5vw, 32px);
+  }
+  .Clock .clock__container .clock_time .clock__item p {
+    font-size: 13px;
+    padding-bottom: 14px;
+  }
+}
+@media (max-width: 320px) {
+  .Clock {
+    padding: 0 8px;
+  }
+  .Clock .clock__container .clock_time .clock__item {
+    padding: 8px 1px 0;
+  }
+  .Clock .clock__container .clock_time .clock__item .clock__item-block span {
+    font-size: 22px;
+  }
+  .Clock .clock__container .clock_time .clock__item p {
+    font-size: 12px;
+  }
+}/*# sourceMappingURL=Clock.css.map */

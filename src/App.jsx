@@ -3,15 +3,17 @@ import Confirm from "./components/Confirm/Confirm";
 import MainSection from "./components/MainSection/MainSection";
 import GuestInvite from "./components/GuestInvite/GuestInvite";
 import LoveStoryblock from "./components/LoveStoryblock/LoveStoryblock";
+import Location from "./components/Location/Location";
 import Sound from "./components/Sound/Sound";
-import Locations from "./components/Locations/Locations";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import Intro from "./components/Intro/Intro";
+import DressCode from "./components/DressCode/DressCode";
+import OurImgs from "./components/OurImgs/OurImgs";
 import "./App.css";
 
 function App() {
-  const [showIntro, setShowIntro] = useState(true);
-  const [contentVisible, setContentVisible] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
+  const [contentVisible, setContentVisible] = useState(true);
 
   useEffect(() => {
     if (!showIntro) return;
@@ -76,12 +78,13 @@ function App() {
       <LanguageSwitcher />
       <Sound />
       <div className="App_content">
-        <LoveStoryblock/>
-      <GuestInvite />
-      <MainSection />
-      {/* <WeddingDate /> */}
-      {/* <Locations/> */}
-      <Confirm />
+        <LoveStoryblock />
+        <GuestInvite />
+        <MainSection />
+        <Location />
+        <DressCode />
+        <OurImgs />
+        <Confirm />
       </div>
     </div>
   );

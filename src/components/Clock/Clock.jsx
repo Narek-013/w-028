@@ -1,43 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "../../context/LanguageContext";
+import { ARMENIAN_FALLBACKS } from "../../lib/armenianFallbacks";
+import { resolveTranslations } from "../../lib/resolveTranslations";
 import "./Clock.scss";
 
 const LABEL_KEYS = ["label_days", "label_hours", "label_minutes", "label_seconds"];
-
-const FALLBACK_TRANSLATIONS = {
-  hy: {
-    label_days: "Օր",
-    label_hours: "Ժամ",
-    label_minutes: "Րոպե",
-    label_seconds: "Վայրկյան",
-  },
-  en: {
-    label_days: "Days",
-    label_hours: "Hours",
-    label_minutes: "Minutes",
-    label_seconds: "Seconds",
-  },
-  ru: {
-    label_days: "Дни",
-    label_hours: "Часы",
-    label_minutes: "Минуты",
-    label_seconds: "Секунды",
-  },
-};
 
 const Clock = () => {
   const { languageCode, clockTranslations } = useLanguage();
   const [timeLeft, setTimeLeft] = useState([0, 0, 0, 0]);
   const blocksRef = useRef([]);
 
-  const fallback =
-    FALLBACK_TRANSLATIONS[languageCode] ?? FALLBACK_TRANSLATIONS.hy;
   const labels = useMemo(
-    () => ({
-      ...fallback,
-      ...clockTranslations,
-    }),
-    [fallback, clockTranslations],
+    () =>
+      resolveTranslations(
+        languageCode,
+        clockTranslations,
+        ARMENIAN_FALLBACKS.clock,
+      ),
+    [languageCode, clockTranslations],
   );
 
   useEffect(() => {
@@ -106,7 +87,7 @@ const Clock = () => {
               >
                 <span className="current">{timeLeft[idx]}</span>
               </div>
-              <p>{labels[key] ?? fallback[key]}</p>
+              <p>{labels[key]}</p>
             </div>
           ))}
         </div>

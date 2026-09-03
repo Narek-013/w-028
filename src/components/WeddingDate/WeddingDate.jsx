@@ -1,6 +1,8 @@
 import "../../App.css";
 import { Imgs } from "../../img/imgs";
 import { useLanguage } from "../../context/LanguageContext";
+import { ARMENIAN_FALLBACKS } from "../../lib/armenianFallbacks";
+import { resolveTranslations } from "../../lib/resolveTranslations";
 import "./WeddingDate.scss";
 
 const WEDDING_YEAR = 2026;
@@ -16,39 +18,6 @@ const WEEKDAY_KEYS = [
   "weekday_sat",
   "weekday_sun",
 ];
-
-const FALLBACK_TRANSLATIONS = {
-  hy: {
-    month_10: "ՀՈԿՏԵՄԲԵՐ",
-    weekday_mon: "ԵԿ",
-    weekday_tue: "ԵՌ",
-    weekday_wed: "ՉՐ",
-    weekday_thu: "ՀՆ",
-    weekday_fri: "ՈՒ",
-    weekday_sat: "ՇԲ",
-    weekday_sun: "ԿԻ",
-  },
-  en: {
-    month_10: "OCTOBER",
-    weekday_mon: "MON",
-    weekday_tue: "TUE",
-    weekday_wed: "WED",
-    weekday_thu: "THU",
-    weekday_fri: "FRI",
-    weekday_sat: "SAT",
-    weekday_sun: "SUN",
-  },
-  ru: {
-    month_10: "ОКТЯБРЬ",
-    weekday_mon: "ПН",
-    weekday_tue: "ВТ",
-    weekday_wed: "СР",
-    weekday_thu: "ЧТ",
-    weekday_fri: "ПТ",
-    weekday_sat: "СБ",
-    weekday_sun: "ВС",
-  },
-};
 
 function buildCalendarDays(year, month) {
   const firstDay = new Date(year, month - 1, 1);
@@ -77,10 +46,12 @@ function buildCalendarDays(year, month) {
 
 const WeddingDate = () => {
   const { languageCode, calendarTranslations } = useLanguage();
-  const fallback =
-    FALLBACK_TRANSLATIONS[languageCode] ?? FALLBACK_TRANSLATIONS.hy;
-  const labels = { ...fallback, ...calendarTranslations };
-  const monthLabel = labels[`month_${WEDDING_MONTH}`] ?? fallback.month_10;
+  const labels = resolveTranslations(
+    languageCode,
+    calendarTranslations,
+    ARMENIAN_FALLBACKS.calendar,
+  );
+  const monthLabel = labels[`month_${WEDDING_MONTH}`];
   const weeks = buildCalendarDays(WEDDING_YEAR, WEDDING_MONTH);
 
   return (
@@ -105,7 +76,7 @@ const WeddingDate = () => {
             <tr>
               {WEEKDAY_KEYS.map((key) => (
                 <th key={key} className="WeddingDate_weekday">
-                  {labels[key] ?? fallback[key]}
+                  {labels[key]}
                 </th>
               ))}
             </tr>
