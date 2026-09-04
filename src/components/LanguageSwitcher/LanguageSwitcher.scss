@@ -2,7 +2,7 @@
   position: fixed;
   top: calc(16px + env(safe-area-inset-top, 0px));
   right: calc(16px + env(safe-area-inset-right, 0px));
-  z-index: 10000;
+  z-index: 100;
 
   .LanguageSwitcher_trigger {
     display: flex;

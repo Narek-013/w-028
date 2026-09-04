@@ -52,6 +52,7 @@ html.intro-locked body {
 .App--revealed .App_content {
   opacity: 1;
   transform: translateY(0);
+  
 }
 
 .App::before {

@@ -26,18 +26,18 @@
 
 .intro__hint {
   position: absolute;
-  top: 0;
+  top: 60px;
   left: 0;
   right: 0;
   z-index: 3;
   padding: 28px 20px;
   text-align: center;
   font-family: "Noto Sans Armenian", sans-serif;
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 500;
   letter-spacing: 0.08em;
-  color: #fff;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+  color: rgb(185, 160, 126);
+  text-shadow: 0 2px 12px rgba(255, 0, 0, 0.8);
   animation: introHintPulse 2s ease-in-out infinite;
   transition: opacity 0.3s ease;
 }

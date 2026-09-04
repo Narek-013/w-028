@@ -36,6 +36,7 @@ const Intro = ({ onFadeStart, onComplete }) => {
     if (!video || isPlaying || exiting) return;
 
     setIsPlaying(true);
+    window.dispatchEvent(new Event("intro:heart"));
 
     const revealVideo = () => {
       setMediaVisible(true);

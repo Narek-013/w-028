@@ -1,84 +1,141 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import "./sound.scss";
-const START_TIME = 50;
+
+const START_TIME = 24;
+const MUSIC_DELAY_MS = 2000;
 const AUDIO_ID = "wedding-audio";
 
 function getAudio() {
   return document.getElementById(AUDIO_ID);
 }
 
+async function seekToStart(audio) {
+  if (audio.readyState < 1) {
+    await new Promise((resolve) => {
+      audio.addEventListener("loadedmetadata", resolve, { once: true });
+    });
+  }
+  if (audio.currentTime < START_TIME) {
+    audio.currentTime = START_TIME;
+  }
+}
+
 const Sound = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const userPausedRef = useRef(false);
+  const scheduledRef = useRef(false);
+  const delayTimerRef = useRef(null);
+  const unlockingRef = useRef(false);
 
-  const syncPlayingState = useCallback(() => {
-    const audio = getAudio();
-    setIsPlaying(Boolean(audio && !audio.paused));
-  }, []);
-
-  const handlePlay = useCallback(() => {
+  const handlePlay = useCallback(async () => {
     const audio = getAudio();
     if (!audio) return;
 
+    userPausedRef.current = false;
     audio.muted = false;
-    if (audio.currentTime < START_TIME) {
-      audio.currentTime = START_TIME;
-    }
 
-    audio
-      .play()
-      .then(() => setIsPlaying(true))
-      .catch((err) => console.warn("Play failed:", err));
+    try {
+      await seekToStart(audio);
+      await audio.play();
+      setIsPlaying(true);
+    } catch (err) {
+      console.warn("Play failed:", err);
+      setIsPlaying(false);
+    }
   }, []);
 
   const handleStop = useCallback(() => {
     const audio = getAudio();
     if (!audio) return;
 
+    userPausedRef.current = true;
+    if (delayTimerRef.current) {
+      clearTimeout(delayTimerRef.current);
+      delayTimerRef.current = null;
+    }
     audio.pause();
     setIsPlaying(false);
   }, []);
+
+  const unlockAudio = useCallback(async () => {
+    const audio = getAudio();
+    if (!audio) return;
+
+    unlockingRef.current = true;
+    audio.muted = true;
+    try {
+      await seekToStart(audio);
+      await audio.play();
+      audio.pause();
+      audio.currentTime = START_TIME;
+    } catch {
+      // Autoplay policies vary; delayed play may still work after unlock attempt.
+    } finally {
+      unlockingRef.current = false;
+    }
+  }, []);
+
+  const scheduleMusicAfterHeart = useCallback(() => {
+    if (scheduledRef.current || userPausedRef.current) return;
+    scheduledRef.current = true;
+
+    void unlockAudio();
+
+    delayTimerRef.current = setTimeout(() => {
+      delayTimerRef.current = null;
+      if (userPausedRef.current) return;
+      handlePlay();
+    }, MUSIC_DELAY_MS);
+  }, [unlockAudio, handlePlay]);
+
+  const toggleSound = useCallback(
+    (event) => {
+      event.stopPropagation();
+      if (isPlaying || delayTimerRef.current) {
+        handleStop();
+      } else {
+        handlePlay();
+      }
+    },
+    [isPlaying, handlePlay, handleStop]
+  );
 
   useEffect(() => {
     const audio = getAudio();
     if (!audio) return;
 
-    audio.muted = false;
-
-    const onPlay = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
+    const onPlay = () => {
+      if (unlockingRef.current) return;
+      setIsPlaying(true);
+    };
+    const onPause = () => {
+      if (unlockingRef.current) return;
+      setIsPlaying(false);
+    };
 
     audio.addEventListener("play", onPlay);
     audio.addEventListener("pause", onPause);
+    setIsPlaying(!audio.paused);
 
-    syncPlayingState();
-
-    if (audio.paused) {
-      handlePlay();
-    }
-
-    const resumeOnInteraction = () => {
-      const current = getAudio();
-      if (!current || !current.paused) return;
-      handlePlay();
-    };
-
-    document.addEventListener("click", resumeOnInteraction, { once: true });
-    document.addEventListener("touchstart", resumeOnInteraction, { once: true });
+    window.addEventListener("intro:heart", scheduleMusicAfterHeart);
 
     return () => {
       audio.removeEventListener("play", onPlay);
       audio.removeEventListener("pause", onPause);
-      document.removeEventListener("click", resumeOnInteraction);
-      document.removeEventListener("touchstart", resumeOnInteraction);
+      window.removeEventListener("intro:heart", scheduleMusicAfterHeart);
+      if (delayTimerRef.current) {
+        clearTimeout(delayTimerRef.current);
+      }
     };
-  }, [handlePlay, syncPlayingState]);
+  }, [scheduleMusicAfterHeart]);
 
   return (
     <div className="sound">
       <div className="sound-block">
         <button
           type="button"
-          onClick={isPlaying ? handleStop : handlePlay}
+          onClick={toggleSound}
+          onTouchStart={(event) => event.stopPropagation()}
           aria-label={isPlaying ? "Turn music off" : "Turn music on"}
         >
           {isPlaying ? (
@@ -118,7 +175,8 @@ const Sound = () => {
               <line x1="16" x2="22" y1="9" y2="15" />
             </svg>
           )}
-        </button>      </div>
+        </button>
+      </div>
     </div>
   );
 };

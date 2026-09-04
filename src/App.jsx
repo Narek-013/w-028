@@ -12,8 +12,8 @@ import OurImgs from "./components/OurImgs/OurImgs";
 import "./App.css";
 
 function App() {
-  const [showIntro, setShowIntro] = useState(false);
-  const [contentVisible, setContentVisible] = useState(true);
+  const [showIntro, setShowIntro] = useState(true);
+  const [contentVisible, setContentVisible] = useState(false);
 
   useEffect(() => {
     if (!showIntro) return;
