@@ -1,13 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../../App.css";
 import "./Confirm.scss";
-import { createRsvp, findRsvpByName } from "../../lib/directus";
+import {
+  findExistingRsvp,
+  resolveClientKey,
+  upsertRsvp,
+} from "../../lib/directus";
 import { useLanguage } from "../../context/LanguageContext";
 import { ARMENIAN_FALLBACKS } from "../../lib/armenianFallbacks";
 import { resolveTranslations } from "../../lib/resolveTranslations";
 
 const NAME_PATTERN = "^[A-Za-zԱ-Ֆա-ֆЁёА-Яа-я]{2,}$";
 const NAME_REGEX = new RegExp(NAME_PATTERN);
+const RSVP_DONE_KEY = "narek_elen_rsvp_done";
 
 const Confirm = () => {
   const { languageCode, confirmTranslations } = useLanguage();
@@ -20,6 +25,9 @@ const Confirm = () => {
   const [inp, setInp] = useState(false);
   const [sendBtn, setSendBtn] = useState(false);
   const [userCome, setUserCome] = useState(false);
+  const [checkingIp, setCheckingIp] = useState(true);
+  const [clientKey, setClientKey] = useState(null);
+  const submittingRef = useRef(false);
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -28,26 +36,41 @@ const Confirm = () => {
     gender: "",
   });
 
-  // If this name + surname already exists in CMS, treat as confirmed
   useEffect(() => {
-    const name = formData.name.trim();
-    const lastName = formData.lastName.trim();
-
-    if (!NAME_REGEX.test(name) || !NAME_REGEX.test(lastName)) return;
-
     let cancelled = false;
-    const timer = setTimeout(async () => {
-      const existing = await findRsvpByName(name, lastName);
-      if (!cancelled && existing?.id) {
-        setUserCome(true);
+
+    (async () => {
+      try {
+        const key = await resolveClientKey();
+        if (cancelled) return;
+
+        setClientKey(key);
+
+        // Always trust CMS: if row was deleted in admin, unlock the form again.
+        const existing = await findExistingRsvp({ ip: key });
+        if (cancelled) return;
+
+        if (existing?.id) {
+          localStorage.setItem(RSVP_DONE_KEY, "1");
+          setUserCome(true);
+        } else {
+          localStorage.removeItem(RSVP_DONE_KEY);
+          setUserCome(false);
+        }
+      } catch {
+        if (!cancelled) {
+          // If CMS check fails, fall back to local flag only for this session.
+          setUserCome(localStorage.getItem(RSVP_DONE_KEY) === "1");
+        }
+      } finally {
+        if (!cancelled) setCheckingIp(false);
       }
-    }, 400);
+    })();
 
     return () => {
       cancelled = true;
-      clearTimeout(timer);
     };
-  }, [formData.name, formData.lastName]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,6 +87,8 @@ const Confirm = () => {
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
+    if (userCome || submittingRef.current) return;
+
     if (!NAME_REGEX.test(formData.name.trim()) || !NAME_REGEX.test(formData.lastName.trim())) {
       alert(labels.error_name);
       return;
@@ -79,34 +104,41 @@ const Confirm = () => {
 
     const name = formData.name.trim();
     const lastName = formData.lastName.trim();
+    const attending = formData.confirm === "true";
 
+    submittingRef.current = true;
     setSendBtn(false);
-    try {
-      const existing = await findRsvpByName(name, lastName);
-      if (existing?.id) {
-        setUserCome(true);
-        return;
-      }
 
-      const attending = formData.confirm === "true";
-      await createRsvp({
+    try {
+      const key = clientKey || (await resolveClientKey());
+      if (key !== clientKey) setClientKey(key);
+
+      const result = await upsertRsvp({
         name,
         last_name: lastName,
         attending,
         guest_count: attending ? countNumber : null,
+        ip: key,
       });
 
-      setFormData({
-        name: "",
-        lastName: "",
-        count: "",
-        confirm: "",
-        gender: "",
-      });
+      localStorage.setItem(RSVP_DONE_KEY, "1");
+
+      if (result.action === "created") {
+        setFormData({
+          name: "",
+          lastName: "",
+          count: "",
+          confirm: "",
+          gender: "",
+        });
+      }
+
+      // Lock after any answer (yes or no) — create/update/exists.
       setUserCome(true);
     } catch (error) {
       alert(`${labels.error_send}: ${error.message}`);
       setSendBtn(true);
+      submittingRef.current = false;
     }
   };
 
@@ -126,7 +158,7 @@ const Confirm = () => {
           <p>{labels.intro}</p>
 
           {!userCome && <h3>{labels.deadline}</h3>}
-          {userCome ? (
+          {checkingIp ? null : userCome ? (
             <h3>{labels.already_confirmed}</h3>
           ) : (
             <form onSubmit={handleSubmit}>

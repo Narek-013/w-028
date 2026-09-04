@@ -61,6 +61,59 @@ export function getAssetUrl(file) {
   return `${DIRECTUS_URL}/assets/${fileId}`;
 }
 
+export async function fetchClientIp() {
+  const endpoints = [
+    "https://api.ipify.org?format=json",
+    "https://api64.ipify.org?format=json",
+  ];
+
+  for (const url of endpoints) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) continue;
+      const data = await response.json();
+      if (typeof data.ip === "string" && data.ip) return data.ip;
+    } catch {
+      // try next
+    }
+  }
+
+  try {
+    const response = await fetch("https://cloudflare.com/cdn-cgi/trace");
+    if (!response.ok) return null;
+    const text = await response.text();
+    const match = text.match(/^ip=(.+)$/m);
+    return match?.[1]?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+const VISITOR_KEY = "narek_elen_visitor_id";
+
+/** Stable browser id used when public IP cannot be resolved. */
+export function getVisitorId() {
+  try {
+    const existing = localStorage.getItem(VISITOR_KEY);
+    if (existing) return existing;
+    const id =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `v-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    localStorage.setItem(VISITOR_KEY, id);
+    return id;
+  } catch {
+    return `v-${Date.now()}`;
+  }
+}
+
+/** Prefer real IP; fall back to browser visitor id so dedupe still works. */
+export async function resolveClientKey() {
+  const ip = await fetchClientIp();
+  if (ip) return ip;
+  return `browser:${getVisitorId()}`;
+}
+
 export async function createRsvp(data) {
   return directusFetch(`/items/${COLLECTION}`, {
     method: "POST",
@@ -68,12 +121,20 @@ export async function createRsvp(data) {
   });
 }
 
-export async function findRsvpByName(name, lastName) {
+export async function updateRsvp(id, data) {
+  return directusFetch(`/items/${COLLECTION}/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function findRsvpByIp(ip) {
+  if (!ip) return null;
+
   try {
     const params = new URLSearchParams({
-      "filter[name][_eq]": name,
-      "filter[last_name][_eq]": lastName,
-      fields: "id,name,last_name,attending,guest_count",
+      "filter[ip][_eq]": ip,
+      fields: "id,name,last_name,attending,guest_count,ip",
       limit: "1",
     });
 
@@ -82,6 +143,58 @@ export async function findRsvpByName(name, lastName) {
   } catch {
     return null;
   }
+}
+
+export async function findRsvpByName(name, lastName) {
+  if (!name || !lastName) return null;
+
+  try {
+    const params = new URLSearchParams({
+      "filter[name][_eq]": name,
+      "filter[last_name][_eq]": lastName,
+      fields: "id,name,last_name,attending,guest_count,ip",
+      limit: "1",
+    });
+
+    const result = await directusFetch(`/items/${COLLECTION}?${params}`);
+    return result.data?.[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Find existing RSVP by IP/client-key first, then by name. */
+export async function findExistingRsvp({ ip, name, lastName }) {
+  const byIp = await findRsvpByIp(ip);
+  if (byIp?.id) return byIp;
+
+  return findRsvpByName(name, lastName);
+}
+
+/**
+ * Create or update a single RSVP row.
+ * Never inserts a second row for the same IP/name.
+ * If update is forbidden by permissions, skips create and returns existing.
+ */
+export async function upsertRsvp(data) {
+  const existing = await findExistingRsvp({
+    ip: data.ip,
+    name: data.name,
+    lastName: data.last_name,
+  });
+
+  if (existing?.id) {
+    try {
+      await updateRsvp(existing.id, data);
+      return { id: existing.id, action: "updated" };
+    } catch {
+      // Public update may be missing — still do not create a duplicate.
+      return { id: existing.id, action: "exists" };
+    }
+  }
+
+  const created = await createRsvp(data);
+  return { id: created?.data?.id ?? null, action: "created" };
 }
 
 export async function fetchLanguages() {

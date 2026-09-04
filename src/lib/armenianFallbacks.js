@@ -40,7 +40,7 @@ export const ARMENIAN_FALLBACKS = {
     intro:
       "Ձեր մասնակցությունը մեզ համար շատ կարևոր է, խնդրում ենք լրացնել այս ձևը ձեր պատասխանով։",
     deadline: "Ձեր պատասխանին կսպասենք մինչև 01.01.2026",
-    already_confirmed: "Դուք արդեն հաստատել եք ձեր մասնակցությունը",
+    already_confirmed: "Դուք արդեն պատասխանել եք",
     placeholder_name: "անուն",
     placeholder_surname: "ազգանուն",
     placeholder_guests: "հյուրերի քանակ",
