@@ -16,7 +16,8 @@ function App() {
   const [contentVisible, setContentVisible] = useState(false);
 
   useEffect(() => {
-    if (!showIntro) return;
+    // Unlock as soon as content starts revealing — don't wait for intro unmount.
+    if (!showIntro || contentVisible) return;
 
     const preventScroll = (e) => e.preventDefault();
 
@@ -29,7 +30,7 @@ function App() {
       document.removeEventListener("wheel", preventScroll);
       document.removeEventListener("touchmove", preventScroll);
     };
-  }, [showIntro]);
+  }, [showIntro, contentVisible]);
 
   useEffect(() => {
     const blockContext = (e) => e.preventDefault();
@@ -68,7 +69,7 @@ function App() {
   
   return (
     <div
-      className={`App ${contentVisible ? "App--revealed" : ""} ${showIntro ? "App--intro-active" : ""}`}
+      className={`App ${contentVisible ? "App--revealed" : ""} ${showIntro && !contentVisible ? "App--intro-active" : ""}`}
     >
       {showIntro && (
         <Intro
