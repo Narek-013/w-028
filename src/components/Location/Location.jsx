@@ -9,10 +9,9 @@ import "./Location.scss";
 const LOCATION_EVENTS = [
   {
     icon: Imgs.rings_icon,
-    placeImgClass: "church",
     placeImg: Imgs.church,
-    lat: 40.167176,
-    lon: 44.309552,
+    lat: 40.205784,
+    lon: 44.524413,
     timeKey: "event_1_time",
     eventKey: "event_1_title",
     placeKey: "event_1_place",

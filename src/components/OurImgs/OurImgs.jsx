@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Imgs } from "../../img/imgs";
 import "./OurImgs.scss";
 
-const SLIDES = ["/and1.jpg", "/and2.jpg", "/Sam&Inna.jpg"];
+const SLIDES = ["/and1.jpg", Imgs.my_photo, Imgs.our_img, Imgs.our_img1];
 
 const OurImgs = () => {
   const [index, setIndex] = useState(0);

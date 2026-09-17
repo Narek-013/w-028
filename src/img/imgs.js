@@ -14,6 +14,12 @@ import glass_icon from "./images/glass-icon.png";
 import church from "./images/church-icon.png";
 import restaurant from "./images/restaurant-icon.png";
 import dress_code from "./images/just-married-icon.png";
+import my_photo from "./images/myimg.jpg";
+import my_photo2 from "./images/myimgsecond.jpg";
+import my_photo3 from "./images/im.jpg";
+import main_img from "./images/main-img.jpg";
+import our_img from "./images/ourimg.jpg";
+import our_img1 from "./images/ourimg1.jpg";
 
 export const Imgs = {
   heart_icon,
@@ -31,5 +37,11 @@ export const Imgs = {
   glass_icon,
   church,
   restaurant,
-  dress_code
+  dress_code,
+  my_photo,
+  my_photo2,
+  my_photo3,
+  main_img,
+  our_img,
+  our_img1
 };
